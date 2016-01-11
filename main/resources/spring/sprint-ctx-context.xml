@@ -110,7 +110,7 @@
             <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
             <tx:method name="delete*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
             <tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
-            <tx:method name="*" read-only="true" propagation="SUPPORTS"/>
+            <tx:method name="*" read-only="true" propagation="NESTED"/>
         </tx:attributes>
     </tx:advice>
     <tx:advice id="taskTxAdvice" transaction-manager="taskTxManager">

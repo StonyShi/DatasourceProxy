@@ -36,7 +36,7 @@ public class UserTaskTest {
         System.out.println("addUser = " + userTask.addUser(user));
 
         System.out.println("----tx------------------------");
-        userTask.addTx();
+        //userTask.addTx();
 
         List<User> users = userTask.getUsers();
         System.out.println("users = " + JSON.toJSONString(users));

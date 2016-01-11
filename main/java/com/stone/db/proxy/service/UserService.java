@@ -33,4 +33,10 @@ public class UserService {
     public void tx(){
         throw new RuntimeException("tx rollback.");
     }
+
+
+    public List<User> getUsersAnd(User user){
+        userDao.addUser(user);
+        return userDao.getUsers();
+    }
 }

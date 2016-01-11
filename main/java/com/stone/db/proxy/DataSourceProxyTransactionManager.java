@@ -2,6 +2,8 @@ package com.stone.db.proxy;
 
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.DefaultTransactionStatus;
+
 
 /**
  * Created by ShiHui on 2016/1/9.
@@ -9,8 +11,18 @@ import org.springframework.transaction.TransactionDefinition;
 public class DataSourceProxyTransactionManager extends DataSourceTransactionManager {
 
     @Override
+    protected Object doGetTransaction() {
+        System.out.println(">>> doGetTransaction.");
+        return super.doGetTransaction();
+    }
+
+    /**
+     * @param transaction
+     * @param definition PROPAGATION_REQUIRED || PROPAGATION_REQUIRES_NEW  || PROPAGATION_NESTED
+     */
+    @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
-        System.out.println("------------------ doBegin");
+        System.out.println(">>> doBegin transaction : " + transaction + ", definition : " + definition);
         System.out.println("name = " +definition.getName()
                 +", level = " + getIsolationLevelName(definition.getIsolationLevel())
                 + ", propagation = " + getPropagationBehaviorName(definition.getPropagationBehavior())
@@ -26,12 +38,35 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
     }
 
     @Override
+    protected void doCommit(DefaultTransactionStatus status) {
+        System.out.println(">>> doCommit status : " + status);
+        super.doCommit(status);
+    }
+
+    @Override
+    protected void doRollback(DefaultTransactionStatus status) {
+        System.out.println(">>> doRollback status : " + status);
+        super.doRollback(status);
+    }
+
+    @Override
+    protected void doResume(Object transaction, Object suspendedResources) {
+        System.out.println(">>> doResume transaction : " + transaction + ", suspendedResources : " + suspendedResources);
+        super.doResume(transaction, suspendedResources);
+    }
+
+    @Override
+    protected Object doSuspend(Object transaction) {
+        System.out.println(">>> doCommit transaction : " + transaction);
+        return super.doSuspend(transaction);
+    }
+
+    @Override
     protected void doCleanupAfterCompletion(Object transaction) {
         DataSourceProxyManager.rest();
         System.out.println(">>> doCleanupAfterCompletion rest");
         super.doCleanupAfterCompletion(transaction);
     }
-
     @Override
     protected boolean isExistingTransaction(Object transaction) {
         boolean isExisting = super.isExistingTransaction(transaction);
