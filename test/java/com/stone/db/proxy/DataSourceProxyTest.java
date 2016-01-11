@@ -1,0 +1,118 @@
+package com.stone.db.proxy;
+
+import com.alibaba.fastjson.JSON;
+import com.stone.db.proxy.model.User;
+import com.stone.db.proxy.service.UserService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Created by ShiHui on 2016/1/10.
+ */
+public class DataSourceProxyTest {
+
+    public static final AtomicInteger sequence = new AtomicInteger(1000);
+    public static void main(String[] args) throws InterruptedException {
+        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/sprint-ctx-context.xml");
+        System.out.println(ac);
+
+        UserService userService = (UserService) ac.getBean("userService");
+
+        System.out.println("----------------------------BEGIN");
+        User user = new User();
+        Random random = new Random(100000);
+
+        //user.setId(1000000 + sequence.incrementAndGet());
+        user.setName("YY_" + random.nextInt(10000));
+        user.setBirthday(new Date(System.currentTimeMillis() - random.nextInt(100000)));
+        System.out.println("addUser = " + userService.addUser(user));
+
+        //user.setId(1000000 + sequence.incrementAndGet());
+        user.setName("YY_" + random.nextInt(10000));
+        user.setBirthday(new Date(System.currentTimeMillis() - random.nextInt(100000)));
+        System.out.println("addUser = " + userService.addUser(user));
+
+        //user.setId(1000000 + sequence.incrementAndGet());
+        user.setName("YY_" + random.nextInt(10000));
+        user.setBirthday(new Date(System.currentTimeMillis() - random.nextInt(100000)));
+        System.out.println("saveUser = " + userService.saveUser(user));
+
+        System.out.println("----tx------------------------");
+        userService.tx();
+
+        List<User> users = userService.getUsers();
+        System.out.println("users = " + JSON.toJSONString(users));
+
+        System.out.println("----------------------------");
+
+        user.setId(1000000 + sequence.incrementAndGet());
+        user.setBirthday(new Date(System.currentTimeMillis() - random.nextInt(100000)));
+        user.setName("YY_" + random.nextInt(10000));
+        System.out.println("addUser = " + userService.addUser(user));
+
+        users = userService.getUsers();
+        System.out.println("users = " + JSON.toJSONString(users));
+
+        users = userService.getUsers();
+        System.out.println("users = " + JSON.toJSONString(users));
+        System.out.println("----------------------------END");
+
+
+//        ExecutorService executorService = Executors.newCachedThreadPool();
+//        for(int i=0; i< 10; i++){
+//            TimeUnit.SECONDS.sleep(1);
+//            executorService.execute(new AddUserTask(ac));
+//        }
+//        for(int i=0; i< 10; i++){
+//            TimeUnit.SECONDS.sleep(1);
+//            executorService.execute(new GetUserTask(ac));
+//        }
+//        TimeUnit.SECONDS.sleep(1);
+//        executorService.shutdown();
+
+    }
+    static class AddUserTask implements Runnable{
+        ClassPathXmlApplicationContext ac;
+
+        public AddUserTask(ClassPathXmlApplicationContext ac) {
+            this.ac = ac;
+        }
+        @Override
+        public void run() {
+            UserService userService = (UserService) ac.getBean("userService");
+
+            System.out.println("----------------------------BEGIN");
+            User user = new User();
+            Random random = new Random(10000);
+            user.setId(1000000 + sequence.incrementAndGet());
+            user.setBirthday(new Date(System.currentTimeMillis() - random.nextInt(100000)));
+            user.setName("YY_" + random.nextInt(10000));
+            System.out.println("addUser = " + userService.addUser(user));
+            List<User> users = userService.getUsers();
+            System.out.println("users = " + JSON.toJSONString(users));
+            System.out.println("----------------------------END");
+        }
+    }
+    static class GetUserTask implements Runnable{
+        ClassPathXmlApplicationContext ac;
+
+        public GetUserTask(ClassPathXmlApplicationContext ac) {
+            this.ac = ac;
+        }
+        @Override
+        public void run() {
+            UserService userService = (UserService) ac.getBean("userService");
+            System.out.println("----------------------------BEGIN");
+            List<User> users = userService.getUsers();
+            System.out.println("users = " + JSON.toJSONString(users));
+            System.out.println("----------------------------END");
+        }
+    }
+}
