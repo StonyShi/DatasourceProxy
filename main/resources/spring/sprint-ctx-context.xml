@@ -110,7 +110,7 @@
             <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
             <tx:method name="delete*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
             <tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
-            <tx:method name="*" read-only="true" propagation="NESTED"/>
+            <tx:method name="*" read-only="true" propagation="SUPPORTS"/>
         </tx:attributes>
     </tx:advice>
     <tx:advice id="taskTxAdvice" transaction-manager="taskTxManager">
@@ -133,4 +133,6 @@
     <bean id="taskJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="taskDataSource"/>
     </bean>
+
+    <import resource="spring-ctx-mybatis.xml"/>
 </beans>

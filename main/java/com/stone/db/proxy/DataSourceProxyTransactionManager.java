@@ -4,8 +4,23 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
-
 /**
+ * 1.事务管理由 TransactionInterceptor 拦截，执行invoke
+ * 2.调用 TransactionAspectSupport#invokeWithinTransaction 实现环绕通知
+ * 3.getTransaction>>doGetTransaction>>isExistingTransaction{
+ *      return handleExistingTransaction
+ * }
+ * 4.if>>[PROPAGATION_REQUIRED || PROPAGATION_REQUIRES_NEW  || PROPAGATION_NESTED]{
+ *      doBegin 在此将创建Connection,如果Connection 为新创建，绑定到TransactionSynchronizationManager#bindResource(DataSource, ConnectionHolder);
+ *      prepareTransactionStatus
+ *      return
+ * }
+ * 5.prepareTransactionStatus 将当前事务事务绑定到本地线程
+ * 如果第四步没有执行，Connection 将由 DataSourceUtils#doGetConnection 创建，绑定到TransactionSynchronizationManager#bindResource(DataSource, ConnectionHolder)
+ * 6.执行ReflectiveMethodInvocation#proceed 如果抛出异常执行completeTransactionAfterThrowing处理
+ * 7.cleanupTransactionInfo
+ * 8.commitTransactionAfterReturning>TransactionManager#commit
+ *
  * Created by ShiHui on 2016/1/9.
  */
 public class DataSourceProxyTransactionManager extends DataSourceTransactionManager {
@@ -35,6 +50,23 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
             System.out.println(">>> markMaster because readOnly = " + definition.isReadOnly());
         }
         super.doBegin(transaction, definition);
+    }
+    /**
+     * Initialize transaction synchronization as appropriate.
+     */
+    @Override
+    protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
+        System.out.println(">>> prepareSynchronization status : " + status + ", definition : " + definition);
+        if(DataSourceProxyManager.isNone()){
+            if(definition.isReadOnly()){
+                DataSourceProxyManager.markSlave();
+                System.out.println(">>> markSlave because readOnly = " + definition.isReadOnly());
+            }else{
+                DataSourceProxyManager.markMaster();
+                System.out.println(">>> markMaster because readOnly = " + definition.isReadOnly());
+            }
+        }
+        super.prepareSynchronization(status, definition);
     }
 
     @Override

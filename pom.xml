@@ -8,7 +8,7 @@
     <name>DatasourceProxy</name>
 
     <properties>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.1.8.RELEASE</spring.version>
     </properties>
 
     <dependencies>
@@ -240,7 +240,16 @@
             <version>4.3</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.3</version>
+        </dependency>
     </dependencies>
 
     <build>

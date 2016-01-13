@@ -133,4 +133,6 @@
     <bean id="taskJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="taskDataSource"/>
     </bean>
+
+    <import resource="spring-ctx-mybatis.xml"/>
 </beans>
