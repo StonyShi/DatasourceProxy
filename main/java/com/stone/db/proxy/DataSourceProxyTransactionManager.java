@@ -42,13 +42,7 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
                 +", level = " + getIsolationLevelName(definition.getIsolationLevel())
                 + ", propagation = " + getPropagationBehaviorName(definition.getPropagationBehavior())
                 + ", isReadOnly = " + definition.isReadOnly());
-        if(definition.isReadOnly()){
-            DataSourceProxyManager.markSlave();
-            System.out.println(">>> markSlave because readOnly = " + definition.isReadOnly());
-        }else{
-            DataSourceProxyManager.markMaster();
-            System.out.println(">>> markMaster because readOnly = " + definition.isReadOnly());
-        }
+        determineDataSource(definition);
         super.doBegin(transaction, definition);
     }
     /**
@@ -57,6 +51,10 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
     @Override
     protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
         System.out.println(">>> prepareSynchronization status : " + status + ", definition : " + definition);
+        determineDataSource(definition);
+        super.prepareSynchronization(status, definition);
+    }
+    private void determineDataSource(TransactionDefinition definition){
         if(DataSourceProxyManager.isNone()){
             if(definition.isReadOnly()){
                 DataSourceProxyManager.markSlave();
@@ -66,9 +64,7 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
                 System.out.println(">>> markMaster because readOnly = " + definition.isReadOnly());
             }
         }
-        super.prepareSynchronization(status, definition);
     }
-
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
         System.out.println(">>> doCommit status : " + status);
