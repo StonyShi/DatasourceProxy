@@ -135,4 +135,7 @@
     </bean>
 
     <import resource="spring-ctx-mybatis.xml"/>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean class="com.stone.db.proxy.cache.CacheManagerAspect"/>
 </beans>

@@ -1,5 +1,6 @@
 package com.stone.db.proxy.service;
 
+import com.stone.db.proxy.cache.CacheableMap;
 import com.stone.db.proxy.dao.UserDao;
 import com.stone.db.proxy.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class UserService {
         return userDao.addUser(user);
     }
 
+    @CacheableMap(key = "getUsers")
     public List<User> getUsers(){
         return userDao.getUsers();
     }
