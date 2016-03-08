@@ -17,8 +17,11 @@
 
     <bean id="config"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location">
-            <value>classpath:config/db.properties</value>
+        <property name="locations">
+            <list>
+                <value>classpath:config/db.properties</value>
+                <value>classpath:config/mail.properties</value>
+            </list>
         </property>
     </bean>
 

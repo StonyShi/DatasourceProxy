@@ -20,7 +20,7 @@ public class DataSourceProxyTest {
 
     public static final AtomicInteger sequence = new AtomicInteger(1000);
     public static void main(String[] args) throws InterruptedException {
-        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/sprint-ctx-context.xml");
+        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/spring-ctx-context.xml");
         System.out.println(ac);
 
         UserService userService = (UserService) ac.getBean("userService");

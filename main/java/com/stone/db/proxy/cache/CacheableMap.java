@@ -18,4 +18,21 @@ public @interface CacheableMap {
     String unless() default "";
 
     String condition() default "";
+
+    String prefix() default "";
+
+    String suffix() default "";
+
+    PrefixType prefixType() default PrefixType.NULL_NAME;
+
+    SuffixType suffixType() default SuffixType.NULL_NAME;
+
+    int expire() default -1;
+
+    enum PrefixType{
+        METHOD_NAME,CLASS_NAME,CLASS_METHOD_NAME,NULL_NAME
+    }
+    enum SuffixType{
+        NULL_NAME,DATE_NAME,TIME_NAME,DATE_TIME_NAME
+    }
 }

@@ -23,11 +23,18 @@ public class UserService {
         return userDao.addUser(user);
     }
 
-    @CacheableMap(key = "getUsers")
+    @CacheableMap(key = "getUsers", suffixType = CacheableMap.SuffixType.DATE_NAME)
     public List<User> getUsers(){
         return userDao.getUsers();
     }
 
+    /**
+     * prefixType  'getUser_' + #id
+     * @see com.stone.db.proxy.cache.CacheableMap.PrefixType#METHOD_NAME
+     * @param id
+     * @return
+     */
+    @CacheableMap(key = "#id", prefixType = CacheableMap.PrefixType.METHOD_NAME)
     public User getUser(Integer id) {
         return userDao.getUser(id);
     }
