@@ -13,7 +13,7 @@ public class MailTemplateTest {
 
 
     public static void main(String[] args) {
-        String[] configLocations = {"classpath:spring/spring-ctx-context.xml"};
+        String[] configLocations = {"classpath:spring/spring-ctx-app.xml"};
         ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(configLocations);
 
         System.out.println(ac);

@@ -14,6 +14,6 @@
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
-        <property name="basePackage" value="com.stony.db.proxy.mapper" />
+        <property name="basePackage" value="com.stone.db.proxy.mapper" />
     </bean>
 </beans>

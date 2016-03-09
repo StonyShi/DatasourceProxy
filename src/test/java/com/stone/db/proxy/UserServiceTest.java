@@ -3,10 +3,13 @@ package com.stone.db.proxy;
 import com.alibaba.fastjson.JSON;
 import com.stone.db.proxy.model.User;
 import com.stone.db.proxy.service.UserService;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.Log4jConfigurer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -15,7 +18,14 @@ import java.util.List;
 public class UserServiceTest {
 
     public static void main(String[] args) {
-        String[] configLocations = {"classpath:spring/spring-ctx-context.xml"};
+//        DOMConfigurator.configure("classpath:config/log4j.xml");
+
+        try {
+            Log4jConfigurer.initLogging("classpath:config/log4j.xml");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String[] configLocations = {"classpath:spring/spring-ctx-app.xml","classpath:spring/spring-ctx-mvc.xml"};
         ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(configLocations);
 
         System.out.println(ac);

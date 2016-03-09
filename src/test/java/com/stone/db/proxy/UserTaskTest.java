@@ -15,7 +15,7 @@ import java.util.Random;
 public class UserTaskTest {
 
     public static void main(String[] args) throws Exception {
-        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/spring-ctx-context.xml");
+        ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/spring-ctx-app.xml");
 
 
         System.out.println(ac);

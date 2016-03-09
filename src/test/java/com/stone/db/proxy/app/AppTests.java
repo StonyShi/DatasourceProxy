@@ -3,7 +3,6 @@ package com.stone.db.proxy.app;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.runners.model.MultipleFailureException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,12 +13,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations ={"classpath:spring/spring-ctx-context.xml","classpath:spring/spring-ctx-mvc.xml"})
+@ContextConfiguration(locations ={"classpath:spring/spring-ctx-app.xml","classpath:spring/spring-ctx-mvc.xml"})
 public class AppTests {
     private MockMvc mockMvc;
 
