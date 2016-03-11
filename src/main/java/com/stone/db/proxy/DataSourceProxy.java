@@ -49,21 +49,24 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     }
     private DataSource determineDataSource(){
         if(DataSourceProxyManager.isNone()){
-            logger.debug(">>> isNone current determine db : {}", this.master);
+            logger.debug(">>> STATUS isNone current determine db is master");
             return this.master;
         }
         if(DataSourceProxyManager.isMaster()){
-            logger.debug(">>> isMaster current determine db  : {}", this.master);
+            logger.debug(">>> STATUS isMaster current determine db is master");
             return this.master;
         }
         return determineSlaveDataSource();
     }
 
     private DataSource determineSlaveDataSource() {
+        if(slaveRequest.get() > Integer.MAX_VALUE){
+            slaveRequest.set(1);
+        }
         int index = slaveRequest.incrementAndGet() % slavesCount;
         if(index < 0) index = - 0;
         DataSource ds = this.slaves.get(index);
-        logger.debug(">>> isSlave current determine db  : {}", ds);
+        logger.debug(">>> STATUS isSlave current determine db is slaves request count {}", slaveRequest.get());
         return ds;
     }
 

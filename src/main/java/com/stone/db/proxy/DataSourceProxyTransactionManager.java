@@ -55,6 +55,7 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
      */
     @Override
     protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
+        logger.info("Initialize transaction synchronization as appropriate.");
         logger.debug(">>> prepareSynchronization status : {}, definition : {}", status, definition);
         determineDataSource(definition);
         super.prepareSynchronization(status, definition);
@@ -72,32 +73,32 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
     }
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
-        logger.debug(">>> doCommit status : {}", status);
+        logger.debug(">>> doCommit");
         super.doCommit(status);
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus status) {
-        logger.debug(">>> doRollback status : {}", status);
+        logger.debug(">>> doRollback");
         super.doRollback(status);
     }
 
     @Override
     protected void doResume(Object transaction, Object suspendedResources) {
-        logger.debug(">>> doResume transaction : {}, suspendedResources : {}" , transaction, suspendedResources);
+        logger.debug(">>> doResume");
         super.doResume(transaction, suspendedResources);
     }
 
     @Override
     protected Object doSuspend(Object transaction) {
-        logger.debug(">>> doCommit transaction : {}", transaction);
+        logger.debug(">>> doSuspend");
         return super.doSuspend(transaction);
     }
 
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
         DataSourceProxyManager.rest();
-        logger.debug(">>> doCleanupAfterCompletion rest");
+        logger.debug(">>> doCleanupAfterCompletion before rest DataSource STATUS");
         super.doCleanupAfterCompletion(transaction);
     }
     @Override
