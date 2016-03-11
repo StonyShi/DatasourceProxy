@@ -28,6 +28,7 @@
     <context:component-scan base-package="com.stone.db.proxy">
         <context:exclude-filter type="regex" expression="com.stone.db.proxy.controller"/>
     </context:component-scan>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <bean id="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${connection.driverClassName}"/>
@@ -138,7 +139,5 @@
     </bean>
 
     <import resource="spring-ctx-mybatis.xml"/>
-
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <bean class="com.stone.db.proxy.cache.CacheManagerAspect"/>
+    <import resource="spring-ctx-cache.xml"/>
 </beans>

@@ -6,11 +6,9 @@
 </head>
 <body>
     <li>
-        <#if ext>
-            <#list users as user>
-                <ul>${user.id}</ul>
-            </#list>
-        </#if>
+    <#if user?exists>
+        <ul>${user!}</ul>
+    </#if>
     </li>
 </body>
 </html>

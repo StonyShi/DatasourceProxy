@@ -1,8 +1,9 @@
 package com.stone.db.proxy.service;
 
-import com.stone.db.proxy.cache.CacheableMap;
+import com.stone.db.proxy.cache.Cachezable;
 import com.stone.db.proxy.dao.UserDao;
 import com.stone.db.proxy.model.User;
+import com.stone.db.proxy.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -10,8 +11,8 @@ import java.util.List;
 /**
  * Created by ShiHui on 2016/1/10.
  */
-@Service
-public class UserService {
+@Service("userService")
+public class UserService implements IUserService{
 
     @Autowired
     private UserDao userDao;
@@ -23,18 +24,18 @@ public class UserService {
         return userDao.addUser(user);
     }
 
-    @CacheableMap(key = "getUsers", suffixType = CacheableMap.SuffixType.DATE_NAME)
+    @Cachezable(key = "getUsers", suffixType = Cachezable.SuffixType.DATE_NAME)
     public List<User> getUsers(){
         return userDao.getUsers();
     }
 
     /**
      * prefixType  'getUser_' + #id
-     * @see com.stone.db.proxy.cache.CacheableMap.PrefixType#METHOD_NAME
+     * @see Cachezable.PrefixType#METHOD_NAME
      * @param id
      * @return
      */
-    @CacheableMap(key = "#id", prefixType = CacheableMap.PrefixType.METHOD_NAME)
+    @Cachezable(key = "#id", prefixType = Cachezable.PrefixType.METHOD_NAME)
     public User getUser(Integer id) {
         return userDao.getUser(id);
     }
@@ -47,5 +48,10 @@ public class UserService {
     public List<User> getUsersAnd(User user){
         userDao.addUser(user);
         return userDao.getUsers();
+    }
+
+    @Override
+    public void register(User user) {
+
     }
 }

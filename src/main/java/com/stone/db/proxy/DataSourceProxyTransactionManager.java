@@ -1,5 +1,7 @@
 package com.stone.db.proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
@@ -25,9 +27,11 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  */
 public class DataSourceProxyTransactionManager extends DataSourceTransactionManager {
 
+    private static Logger logger = LoggerFactory.getLogger(DataSourceProxyTransactionManager.class);
+
     @Override
     protected Object doGetTransaction() {
-        System.out.println(">>> doGetTransaction.");
+        logger.debug(">>> doGetTransaction.");
         return super.doGetTransaction();
     }
 
@@ -37,11 +41,12 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
      */
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
-        System.out.println(">>> doBegin transaction : " + transaction + ", definition : " + definition);
-        System.out.println("name = " +definition.getName()
-                +", level = " + getIsolationLevelName(definition.getIsolationLevel())
-                + ", propagation = " + getPropagationBehaviorName(definition.getPropagationBehavior())
-                + ", isReadOnly = " + definition.isReadOnly());
+        logger.info(">>> doBegin transaction : {}, definition : {}",transaction,definition);
+        logger.debug(">>> TransactionDefinition[name = {}, level = {}, propagation = {}, propagation = {}, isReadOnly = {}]"
+                ,definition.getName()
+                ,getIsolationLevelName(definition.getIsolationLevel())
+                ,getPropagationBehaviorName(definition.getPropagationBehavior())
+                ,definition.isReadOnly());
         determineDataSource(definition);
         super.doBegin(transaction, definition);
     }
@@ -50,7 +55,7 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
      */
     @Override
     protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
-        System.out.println(">>> prepareSynchronization status : " + status + ", definition : " + definition);
+        logger.debug(">>> prepareSynchronization status : {}, definition : {}", status, definition);
         determineDataSource(definition);
         super.prepareSynchronization(status, definition);
     }
@@ -58,47 +63,47 @@ public class DataSourceProxyTransactionManager extends DataSourceTransactionMana
         if(DataSourceProxyManager.isNone()){
             if(definition.isReadOnly()){
                 DataSourceProxyManager.markSlave();
-                System.out.println(">>> markSlave because readOnly = " + definition.isReadOnly());
+                logger.debug(">>> markSlave because readOnly = {}", definition.isReadOnly());
             }else{
                 DataSourceProxyManager.markMaster();
-                System.out.println(">>> markMaster because readOnly = " + definition.isReadOnly());
+                logger.debug(">>> markMaster because readOnly = {}", definition.isReadOnly());
             }
         }
     }
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
-        System.out.println(">>> doCommit status : " + status);
+        logger.debug(">>> doCommit status : {}", status);
         super.doCommit(status);
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus status) {
-        System.out.println(">>> doRollback status : " + status);
+        logger.debug(">>> doRollback status : {}", status);
         super.doRollback(status);
     }
 
     @Override
     protected void doResume(Object transaction, Object suspendedResources) {
-        System.out.println(">>> doResume transaction : " + transaction + ", suspendedResources : " + suspendedResources);
+        logger.debug(">>> doResume transaction : {}, suspendedResources : {}" , transaction, suspendedResources);
         super.doResume(transaction, suspendedResources);
     }
 
     @Override
     protected Object doSuspend(Object transaction) {
-        System.out.println(">>> doCommit transaction : " + transaction);
+        logger.debug(">>> doCommit transaction : {}", transaction);
         return super.doSuspend(transaction);
     }
 
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
         DataSourceProxyManager.rest();
-        System.out.println(">>> doCleanupAfterCompletion rest");
+        logger.debug(">>> doCleanupAfterCompletion rest");
         super.doCleanupAfterCompletion(transaction);
     }
     @Override
     protected boolean isExistingTransaction(Object transaction) {
         boolean isExisting = super.isExistingTransaction(transaction);
-        System.out.println(">>> isExistingTransaction : " + isExisting);
+        logger.debug(">>> isExistingTransaction : {}", isExisting);
         return isExisting;
     }
 

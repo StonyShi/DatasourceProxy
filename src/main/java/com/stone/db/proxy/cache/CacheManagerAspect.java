@@ -8,17 +8,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.EvaluationException;
 import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by ShiHui on 2016/1/23.
@@ -26,7 +21,35 @@ import java.util.Map;
 @Aspect
 public class CacheManagerAspect {
 
-    @Pointcut("@annotation(com.stone.db.proxy.cache.CacheableMap)")
+    private CachezManager cachezManager;
+
+    public CacheManagerAspect() {
+        if(cachezManager == null){
+            setCachezManager(new CachezMapManager());
+        }
+    }
+
+    public CacheManagerAspect(CachezManager cachezManager) {
+        setCachezManager(cachezManager);
+    }
+    public void setCachezManager(CachezManager cachezManager){
+        this.cachezManager = cachezManager;
+    }
+    public CachezManager getCachezManager(){
+        return this.cachezManager;
+
+    }
+    protected Cachez getCachez(){
+        return getCachezManager().getCachez();
+    }
+    protected void set(String key,Object value){
+        getCachez().set(key,value);
+    }
+    protected Object get(String key){
+        return getCachez().get(key);
+    }
+
+    @Pointcut("@annotation(com.stone.db.proxy.cache.Cachezable)")
     public void cachePointcut() {}
 
 
@@ -41,13 +64,13 @@ public class CacheManagerAspect {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
 
-        CacheableMap cacheableMap = AnnotationUtils.findAnnotation(method,CacheableMap.class);
-        if(cacheableMap == null){
+        Cachezable cachezable = AnnotationUtils.findAnnotation(method,Cachezable.class);
+        if(cachezable == null){
             return pjp.proceed();
         }
-        String cacheKey = processCacheKey(pjp,cacheableMap);
+        String cacheKey = processCacheKey(pjp, cachezable);
         try{
-            final Object result = CACHES.get(cacheKey);
+            final Object result = get(cacheKey);
             if (result != null) {
                 log("Caching on method %s hit key [%s]", pjp.toShortString(), cacheKey);
                 return result;
@@ -58,7 +81,7 @@ public class CacheManagerAspect {
         }
         final Object result = pjp.proceed();
         try {
-            CACHES.put(cacheKey,result);
+            set(cacheKey,result);
             log("Caching on method %s put key [%s]", pjp.toShortString(), cacheKey);
         } catch (Exception ex) {
             warn(ex, "Caching on method %s put key [%s] aborted due to an error.", pjp.toShortString(), cacheKey);
@@ -67,7 +90,7 @@ public class CacheManagerAspect {
     }
 
 
-    public static final Map<String,Object> CACHES = Collections.synchronizedMap(new HashMap<String, Object>());
+
     public static final ExpressionParser EXPRESSION_PARSER = new SpelExpressionParser();
     public static void log(String msg,Object... args){
         System.out.println(String.format(msg,args));
@@ -83,8 +106,8 @@ public class CacheManagerAspect {
     public boolean isNotEmpty(String v){
         return !isEmpty(v);
     }
-    private String processCacheKey(final ProceedingJoinPoint pjp,CacheableMap cacheableMap){
-        String cacheKey = cacheableMap.key();
+    private String processCacheKey(final ProceedingJoinPoint pjp,Cachezable cachezable){
+        String cacheKey = cachezable.key();
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         String className = pjp.getSignature().getDeclaringTypeName();
         String methodName = pjp.getSignature().getName();
@@ -102,28 +125,28 @@ public class CacheManagerAspect {
                     Object obj = EXPRESSION_PARSER.parseExpression(cacheKey).getValue(context);
                     cacheKey = obj.toString();
                 }
-                String prefix = cacheableMap.prefix();
+                String prefix = cachezable.prefix();
                 if(isEmpty(prefix)){
-                    CacheableMap.PrefixType prefixType = cacheableMap.prefixType();
-                    if(CacheableMap.PrefixType.CLASS_METHOD_NAME == prefixType){
+                    Cachezable.PrefixType prefixType = cachezable.prefixType();
+                    if(Cachezable.PrefixType.CLASS_METHOD_NAME == prefixType){
                         prefix = className + "_" + methodName + "_";
-                    } else if (CacheableMap.PrefixType.CLASS_NAME == prefixType){
+                    } else if (Cachezable.PrefixType.CLASS_NAME == prefixType){
                         prefix = className + "_";
-                    } else if(CacheableMap.PrefixType.METHOD_NAME == prefixType){
+                    } else if(Cachezable.PrefixType.METHOD_NAME == prefixType){
                         prefix = methodName + "_";
                     }
                 }
                 if(isNotEmpty(prefix)) {
                     cacheKey = prefix + cacheKey;
                 }
-                String suffix = cacheableMap.suffix();
+                String suffix = cachezable.suffix();
                 if(isEmpty(suffix)){
-                    CacheableMap.SuffixType suffixType = cacheableMap.suffixType();
-                    if(CacheableMap.SuffixType.DATE_NAME == suffixType){
+                    Cachezable.SuffixType suffixType = cachezable.suffixType();
+                    if(Cachezable.SuffixType.DATE_NAME == suffixType){
                         suffix = DateUtils.formatDate(new Date(),"_yyyy_MM_dd");
-                    }else if(CacheableMap.SuffixType.TIME_NAME == suffixType){
+                    }else if(Cachezable.SuffixType.TIME_NAME == suffixType){
                         suffix = DateUtils.formatDate(new Date(),"_HH_mm_ss");
-                    }else if(CacheableMap.SuffixType.DATE_TIME_NAME == suffixType){
+                    }else if(Cachezable.SuffixType.DATE_TIME_NAME == suffixType){
                         suffix = DateUtils.formatDate(new Date(),"_yyyy_MM_dd_HH_mm_ss");
                     }
                 }

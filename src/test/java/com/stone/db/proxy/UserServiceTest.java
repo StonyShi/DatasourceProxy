@@ -25,7 +25,7 @@ public class UserServiceTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String[] configLocations = {"classpath:spring/spring-ctx-app.xml","classpath:spring/spring-ctx-mvc.xml"};
+        String[] configLocations = {"classpath:spring/spring-ctx-app.xml","classpath:spring/spring-servlet.xml"};
         ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(configLocations);
 
         System.out.println(ac);

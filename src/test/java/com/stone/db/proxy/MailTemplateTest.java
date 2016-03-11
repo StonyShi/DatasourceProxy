@@ -2,7 +2,6 @@ package com.stone.db.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.stone.db.proxy.model.User;
-import com.stone.db.proxy.service.UserRegistrationService;
 import com.stone.db.proxy.service.UserService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -20,7 +19,7 @@ public class MailTemplateTest {
 
 
         UserService userService = (UserService) ac.getBean("userService");
-        UserRegistrationService userRegistrationService = (UserRegistrationService) ac.getBean("userRegistrationService");
+
 
         System.out.println("----------------------------BEGIN");
 
@@ -28,7 +27,7 @@ public class MailTemplateTest {
         System.out.println("user = " + JSON.toJSONString(user));
         System.out.println("----------------------------");
 
-        userRegistrationService.register(user);
+        userService.register(user);
 
     }
 }

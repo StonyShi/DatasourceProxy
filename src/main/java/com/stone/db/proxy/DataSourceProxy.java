@@ -1,5 +1,7 @@
 package com.stone.db.proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.util.Assert;
@@ -16,6 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by ShiHui on 2016/1/9.
  */
 public class DataSourceProxy extends AbstractDataSource implements InitializingBean{
+
+    private static Logger logger = LoggerFactory.getLogger(DataSourceProxy.class);
 
     private DataSource master;
     private List<DataSource> slaves;
@@ -45,11 +49,11 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     }
     private DataSource determineDataSource(){
         if(DataSourceProxyManager.isNone()){
-            System.out.println("isNone current determine db  : " + this.master);
+            logger.debug(">>> isNone current determine db : {}", this.master);
             return this.master;
         }
         if(DataSourceProxyManager.isMaster()){
-            System.out.println("isMaster current determine db  : " + this.master);
+            logger.debug(">>> isMaster current determine db  : {}", this.master);
             return this.master;
         }
         return determineSlaveDataSource();
@@ -59,15 +63,14 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
         int index = slaveRequest.incrementAndGet() % slavesCount;
         if(index < 0) index = - 0;
         DataSource ds = this.slaves.get(index);
-        System.out.println("isSlave current determine db  : " + ds);
+        logger.debug(">>> isSlave current determine db  : {}", ds);
         return ds;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        Connection conn = determineDataSource().getConnection();
-        System.out.println("current conn : " + conn + " , code = " + conn.hashCode());
-        return conn;
+        logger.debug("Enter");
+        return determineDataSource().getConnection();
     }
 
     @Override
