@@ -71,5 +71,7 @@ public class AppTests {
         mockMvc.perform(get("/messages/form"))
                 .andExpect(xpath("//input[@name='summary']").exists())
                 .andExpect(xpath("//textarea[@name='text']").exists());
+
+
     }
 }

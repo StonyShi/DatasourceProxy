@@ -124,4 +124,17 @@
     <bean id="taskJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="taskDataSource"/>
     </bean>
+
+    <bean id="dataSourceClusterInitListener" class="com.stone.db.proxy.listener.DataSourceClusterInitListener">
+        <property name="user" value="${connection.slave3.username}"/>
+        <property name="password" value="${connection.slave3.password}"/>
+        <property name="urlSource" value="${connection.master.url}"/>
+        <property name="urlTargets" >
+            <array>
+                <value>"${connection.slave.url}"</value>
+                <value>"${connection.slave2.url}"</value>
+                <value>"${connection.slave3.url}"</value>
+            </array>
+        </property>
+    </bean>
 </beans>

@@ -38,7 +38,12 @@
         </javaClientGenerator>
 
         <!-- !!!! Table Configurations !!!! -->
-        <table tableName="orders"
+        <!--<table tableName="orders"-->
+               <!--enableCountByExample="false"-->
+               <!--enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false"/>-->
+        <table tableName="cat"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"

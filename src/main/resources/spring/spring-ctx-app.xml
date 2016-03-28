@@ -27,6 +27,7 @@
 
     <context:component-scan base-package="com.stone.db.proxy">
         <context:exclude-filter type="regex" expression="com.stone.db.proxy.controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 

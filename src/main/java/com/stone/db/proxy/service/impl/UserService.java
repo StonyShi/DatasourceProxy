@@ -1,4 +1,4 @@
-package com.stone.db.proxy.service;
+package com.stone.db.proxy.service.impl;
 
 import com.stone.db.proxy.cache.Cachezable;
 import com.stone.db.proxy.dao.UserDao;
@@ -53,5 +53,10 @@ public class UserService implements IUserService{
     @Override
     public void register(User user) {
 
+    }
+
+    @Override
+    public void task(String name) {
+        System.out.println("Task " + name +" ----------------------------------------------------------");
     }
 }

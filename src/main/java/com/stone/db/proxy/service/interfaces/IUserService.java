@@ -20,4 +20,6 @@ public interface IUserService {
     public List<User> getUsersAnd(User user);
 
     public void register(User user);
+
+    public void task(String name);
 }

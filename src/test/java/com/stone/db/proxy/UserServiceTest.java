@@ -2,12 +2,9 @@ package com.stone.db.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.stone.db.proxy.model.User;
-import com.stone.db.proxy.service.UserService;
-import org.apache.log4j.xml.DOMConfigurator;
+import com.stone.db.proxy.service.impl.UserService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Log4jConfigurer;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import java.io.FileNotFoundException;
 import java.util.List;

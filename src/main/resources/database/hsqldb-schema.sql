@@ -12,3 +12,10 @@ CREATE TABLE IF NOT EXISTS orders (
     create_date TIMESTAMP,
     constraint pk_orders primary key (id)
 );
+
+CREATE TABLE IF NOT EXISTS cat (
+    id int not null IDENTITY,
+    name varchar(120),
+    create_date TIMESTAMP,
+    constraint pk_cat primary key (id)
+);

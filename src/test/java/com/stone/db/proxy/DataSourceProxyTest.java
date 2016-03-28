@@ -2,7 +2,7 @@ package com.stone.db.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.stone.db.proxy.model.User;
-import com.stone.db.proxy.service.UserService;
+import com.stone.db.proxy.service.impl.UserService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;

@@ -104,4 +104,10 @@
         <property name="maxUploadSize" value="1048576" />
         <property name="maxInMemorySize" value="4096" />
     </bean>
+
+    <bean id="asyncControllerContext" class="com.stone.db.proxy.controller.context.AsyncControllerContext">
+        <property name="corePoolSize" value="10"/>
+        <property name="maximumPoolSize" value="30"/>
+        <property name="keepAliveTimeInSeconds" value="100"/>
+    </bean>
 </beans>

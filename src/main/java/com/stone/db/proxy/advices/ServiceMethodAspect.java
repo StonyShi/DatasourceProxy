@@ -1,11 +1,9 @@
 package com.stone.db.proxy.advices;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +18,7 @@ public class ServiceMethodAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceMethodAspect.class);
 
-    @Pointcut("execution(* com.stone.db.proxy.service.*.*(*.*))")
+    @Pointcut("execution(* com.stone.db.proxy.service.*.*.*(*))")
     public void servicePointcut(){}
 
     //&& args(xx)
@@ -36,7 +34,10 @@ public class ServiceMethodAspect {
         logger.info("logAfterReturning.");
         logMethod(joinPoint);
     }
+    @Before("execution(* com.stone.db.proxy.service.*.*.*(*)) ")
+    public void before(ProceedingJoinPoint joinPoint){
 
+    }
     protected void logMethod(JoinPoint joinPoint){
         Signature sig = joinPoint.getSignature();
         String task = sig.getDeclaringType().getName() + "#" + sig.getName();

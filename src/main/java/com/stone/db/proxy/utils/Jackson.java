@@ -100,4 +100,14 @@ public abstract class Jackson {
         }
         return new ArrayList<Map<String,Object>>();
     }
+
+    public static String toJSON(Object params) {
+        String jsonStr = "";
+        try {
+            jsonStr = mapper.writeValueAsString(params);
+        } catch (JsonProcessingException e) {
+            logger.error("|JsonProcessingException|", e);
+        }
+        return jsonStr;
+    }
 }
