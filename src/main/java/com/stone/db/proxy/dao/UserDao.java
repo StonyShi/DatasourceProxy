@@ -1,5 +1,6 @@
 package com.stone.db.proxy.dao;
 
+import com.stone.db.proxy.mapper.UserRowMapper;
 import com.stone.db.proxy.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,17 +32,11 @@ public class UserDao {
 
     public User getUser(Integer id) {
         String sql = "SELECT id,name,birthday FROM users Where id = ?";
-        return jdbcTemplate.queryForObject(sql,new Object[]{id},new UserRowMapper());
+        List<User> list = jdbcTemplate.query(sql,new Object[]{id},new UserRowMapper());
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
-    static class UserRowMapper implements RowMapper<User>{
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setName(rs.getString("name"));
-            user.setBirthday(rs.getTimestamp("birthday"));
-            return user;
-        }
-    }
 }

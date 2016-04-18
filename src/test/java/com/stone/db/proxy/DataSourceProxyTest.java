@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.stone.db.proxy.model.User;
 import com.stone.db.proxy.service.impl.UserService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.Log4jConfigurer;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +22,12 @@ public class DataSourceProxyTest {
 
     public static final AtomicInteger sequence = new AtomicInteger(1000);
     public static void main(String[] args) throws InterruptedException {
+        try {
+            Log4jConfigurer.initLogging("classpath:config/log4j.xml");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring/spring-ctx-app.xml");
         System.out.println(ac);
 

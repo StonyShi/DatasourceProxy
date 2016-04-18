@@ -3,15 +3,15 @@ package com.stone.db.proxy.cache;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Stony on 2016/3/11.
  */
 public class CachezMap implements Cachez{
 
-    public static final Map<String,Object> CACHES = Collections.synchronizedMap(new HashMap<String, Object>());
+    public static final ConcurrentHashMap<String,Object> CACHES = new ConcurrentHashMap<String,Object>();
 
-    @Override
     public Integer set(String key, Object value) {
         CACHES.put(key,value);
         return 1;

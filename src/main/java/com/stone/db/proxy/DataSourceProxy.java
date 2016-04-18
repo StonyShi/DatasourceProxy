@@ -21,52 +21,126 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
 
     private static Logger logger = LoggerFactory.getLogger(DataSourceProxy.class);
 
-    private DataSource master;
-    private List<DataSource> slaves;
+    private DataSource[] masters;
+    private DataSource[] slaves;
     private int slavesCount = 0;
+    private int mastersCount = 0;
     private AtomicInteger slaveRequest = new AtomicInteger(1);
+    private AtomicInteger masterRequest = new AtomicInteger(1);
+    private final Object slave_monitor = new Object();
+    private final Object master_monitor = new Object();
+    /** 最大请求次数 **/
+    public static final int MAX_REQUEST = (Integer.MAX_VALUE-3);
 
-    public DataSource getMaster() {
-        return master;
-    }
 
-    public void setMaster(DataSource master) {
-        this.master = master;
-    }
-
-    public List<DataSource> getSlaves() {
-        return slaves;
-    }
-
-    public void setSlave(DataSource slave) {
-        if(getSlaves() == null){
-            setSlaves(Collections.synchronizedList(new ArrayList<DataSource>()));
+    public void setMaster(DataSource ds) {
+        Assert.notNull(ds, "setMaster arg ds must not null.");
+        int count = getMastersCount();
+        DataSource[] result = new DataSource[count + 1];
+        if(count > 0){
+            System.arraycopy(this.masters, 0, result, 0, count);
         }
-        getSlaves().add(slave);
+        result[count] = ds;
+        this.masters = result;
     }
-    public void setSlaves(List<DataSource> slaves) {
-        this.slaves = slaves;
+
+    public DataSource[] getMasters() {
+        if(this.masters == null){
+            this.masters = new DataSource[0];
+        }
+        return masters;
+    }
+
+    public void setMasters(List<DataSource> list) {
+        Assert.notNull(list, "setMasters arg list must not null.");
+        int count = getMastersCount();
+        DataSource[] result = new DataSource[count +list.size()];
+        if(count > 0) {
+            System.arraycopy(this.masters, 0, result, 0, count);
+        }
+        for(DataSource ds : list){
+            result[count] = ds;
+            count++;
+        }
+        this.masters = result;
+    }
+
+    public void setSlave(DataSource ds) {
+        Assert.notNull(ds, "setSlave arg ds must not null.");
+        int count = getSlavesCount();
+        DataSource[] result = new DataSource[count + 1];
+        if(count > 0){
+            System.arraycopy(this.slaves,0,result,0,count);
+        }
+        result[count] = ds;
+        this.slaves = result;
+    }
+    public void setSlaves(List<DataSource> list) {
+        Assert.notNull(list, "setSlaves arg list must not null.");
+        int count = getSlavesCount();
+        DataSource[] result = new DataSource[count + list.size()];
+        if(count > 0) {
+            System.arraycopy(this.slaves, 0, result, 0, count);
+        }
+        for(DataSource ds : list){
+            result[count] = ds;
+            count++;
+        }
+        this.slaves = result;
+    }
+    public DataSource[] getSlaves() {
+        if(this.slaves == null){
+            slaves = new DataSource[0];
+        }
+        return slaves;
     }
     private DataSource determineDataSource(){
         if(DataSourceProxyManager.isNone()){
             logger.debug(">>> STATUS isNone current determine db is master");
-            return this.master;
+            return determineMasterDataSource();
         }
         if(DataSourceProxyManager.isMaster()){
             logger.debug(">>> STATUS isMaster current determine db is master");
-            return this.master;
+            return determineMasterDataSource();
         }
         return determineSlaveDataSource();
     }
 
+    /**
+     * 主库轮询选择
+     * @return DataSource
+     */
+    private DataSource determineMasterDataSource() {
+        int index = masterRequest.incrementAndGet() % mastersCount;
+        if(index == MAX_REQUEST){
+            logger.info("Master Request count rest is 1.");
+            masterRequest.set(1);
+        }
+        if(index < 0) index = - 0;
+        DataSource ds;
+        synchronized (master_monitor){
+            ds = this.masters[index];
+        }
+        logger.info(">>> STATUS isMaster current determine db is masters request count {}", masterRequest.get());
+        return ds;
+    }
+
+    /**
+     * 从库轮询选择
+     * @return DataSource
+     */
     private DataSource determineSlaveDataSource() {
-        if(slaveRequest.get() > Integer.MAX_VALUE){
+        int index = slaveRequest.incrementAndGet() % slavesCount;
+        if(index == MAX_REQUEST){
+            logger.info("Slave Request count rest is 1.");
             slaveRequest.set(1);
         }
-        int index = slaveRequest.incrementAndGet() % slavesCount;
         if(index < 0) index = - 0;
-        DataSource ds = this.slaves.get(index);
-        logger.debug(">>> STATUS isSlave current determine db is slaves request count {}", slaveRequest.get());
+        DataSource ds;
+        synchronized (slave_monitor){
+            ds = this.slaves[index];
+        }
+        logger.info(">>> STATUS isSlave current determine db is slaves request count {}", slaveRequest.get());
         return ds;
     }
 
@@ -83,8 +157,21 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(this.master, "master is required");
-        Assert.notNull(this.slaves, "slave/slaves is required");
-        this.slavesCount = this.slaves.size();
+        Assert.notNull(this.masters, "property master/masters is required");
+        Assert.notNull(this.slaves, "property slave/slaves is required");
+        this.slavesCount = this.slaves.length;
+        this.mastersCount = this.masters.length;
+    }
+    private int getMastersCount(){
+        if(this.masters == null){
+            return 0;
+        }
+        return this.masters.length;
+    }
+    private int getSlavesCount(){
+        if(this.slaves == null){
+            return 0;
+        }
+        return this.slaves.length;
     }
 }

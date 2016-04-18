@@ -1,5 +1,6 @@
 package com.stone.db.proxy.task;
 
+import com.stone.db.proxy.mapper.UserRowMapper;
 import com.stone.db.proxy.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,15 +36,6 @@ public class UserTask {
     }
 
 
-    static class UserRowMapper implements RowMapper<User> {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setName(rs.getString("name"));
-            user.setBirthday(rs.getTimestamp("birthday"));
-            return user;
-        }
-    }
+
 
 }

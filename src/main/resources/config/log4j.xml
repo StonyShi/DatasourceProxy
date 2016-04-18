@@ -30,11 +30,11 @@
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] %c{3\} - %m%n"/>
 		</layout>
-		<!--限制输出级别 -->
-		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMax" value="ERROR"/>
-			<param name="LevelMin" value="TRACE"/>
-		</filter>
+		<!--&lt;!&ndash;限制输出级别 &ndash;&gt;-->
+		<!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+			<!--<param name="LevelMax" value="ERROR"/>-->
+			<!--<param name="LevelMin" value="TRACE"/>-->
+		<!--</filter>-->
 	</appender>
 	<!--<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.home}//logs//catalina.out"/>

@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
  * Created by Stony on 2016/3/9.
  */
 
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class ServiceMethodAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceMethodAspect.class);
 
-    @Pointcut("execution(* com.stone.db.proxy.service.*.*.*(*))")
+    @Pointcut("execution(* com.stone.db.proxy.service.impl..*.*(*))")
     public void servicePointcut(){}
 
     //&& args(xx)
@@ -34,8 +34,13 @@ public class ServiceMethodAspect {
         logger.info("logAfterReturning.");
         logMethod(joinPoint);
     }
-    @Before("execution(* com.stone.db.proxy.service.*.*.*(*)) ")
-    public void before(ProceedingJoinPoint joinPoint){
+    @Before("execution(* com.stone.db.proxy.service.impl..*.*(*)) ")
+    public void before(JoinPoint joinPoint){
+
+    }
+    //ProceedingJoinPoint is only supported for around advice
+    @Around("execution(* com.stone.db.proxy.service.impl..*.*(*)) ")
+    public void around(ProceedingJoinPoint joinPoint){
 
     }
     protected void logMethod(JoinPoint joinPoint){

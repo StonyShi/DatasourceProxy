@@ -25,12 +25,29 @@
         <property name="removeAbandonedTimeout" value="${connection.removeAbandonedTimeout}"/>
         <property name="logAbandoned" value="${connection.logAbandoned}"/>
     </bean>
+    <!-- masters datasource config -->
     <bean id="masterDataSource" parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="username" value="${connection.master.username}"/>
         <property name="password" value="${connection.master.password}"/>
         <property name="url" value="${connection.master.url}"/>
         <property name="driverClassName" value="${connection.driverClassName}"/>
     </bean>
+
+    <bean id="master2DataSource" parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="username" value="${connection.master2.username}"/>
+        <property name="password" value="${connection.master2.password}"/>
+        <property name="url" value="${connection.master2.url}"/>
+        <property name="driverClassName" value="${connection.driverClassName}"/>
+    </bean>
+
+    <bean id="master3DataSource" parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="username" value="${connection.master3.username}"/>
+        <property name="password" value="${connection.master3.password}"/>
+        <property name="url" value="${connection.master3.url}"/>
+        <property name="driverClassName" value="${connection.driverClassName}"/>
+    </bean>
+
+    <!-- slaves datasource config -->
     <bean id="slaveDataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="username" value="${connection.slave.username}"/>
         <property name="password" value="${connection.slave.password}"/>
@@ -51,14 +68,15 @@
     </bean>
 
 
-    <bean id="taskDataSource" parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="username" value="${connection.master.username}"/>
-        <property name="password" value="${connection.master.password}"/>
-        <property name="url" value="${connection.master.url}"/>
-        <property name="driverClassName" value="${connection.driverClassName}"/>
-    </bean>
-
     <jdbc:initialize-database data-source="masterDataSource">
+        <jdbc:script location="classpath:database/hsqldb-schema.sql"/>
+        <jdbc:script location="classpath:database/hsqldb-dataload.sql"/>
+    </jdbc:initialize-database>
+    <jdbc:initialize-database data-source="master2DataSource">
+        <jdbc:script location="classpath:database/hsqldb-schema.sql"/>
+        <jdbc:script location="classpath:database/hsqldb-dataload.sql"/>
+    </jdbc:initialize-database>
+    <jdbc:initialize-database data-source="master3DataSource">
         <jdbc:script location="classpath:database/hsqldb-schema.sql"/>
         <jdbc:script location="classpath:database/hsqldb-dataload.sql"/>
     </jdbc:initialize-database>
@@ -76,7 +94,14 @@
     </jdbc:initialize-database>
 
     <bean id="dataSourceProxy" class="com.stone.db.proxy.DataSourceProxy">
-        <property name="master" ref="masterDataSource"/>
+        <!--<property name="master" ref="masterDataSource"/>-->
+        <property name="masters">
+            <list>
+                <ref bean="masterDataSource"/>
+                <ref bean="master2DataSource"/>
+                <ref bean="master3DataSource"/>
+            </list>
+        </property>
         <property name="slaves">
             <list>
                 <ref bean="slaveDataSource"/>
@@ -88,9 +113,7 @@
     <bean id="transactionManager" class="com.stone.db.proxy.DataSourceProxyTransactionManager">
         <property name="dataSource" ref="dataSourceProxy"/>
     </bean>
-    <bean id="taskTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="taskDataSource"/>
-    </bean>
+
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception" isolation="REPEATABLE_READ"/>
@@ -104,17 +127,13 @@
             <tx:method name="*" read-only="true" propagation="SUPPORTS"/>
         </tx:attributes>
     </tx:advice>
-    <tx:advice id="taskTxAdvice" transaction-manager="taskTxManager">
-        <tx:attributes>
-            <tx:method name="*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>
-        </tx:attributes>
-    </tx:advice>
+
     <aop:config proxy-target-class="true">
-        <aop:pointcut id="txServicePointcut" expression="execution(* com.stone.db.proxy.service.*.*(..))"/>
-        <aop:pointcut id="txTaskPointcut" expression="execution(* com.stone.db.proxy.task.*.*(..))"/>
+        <aop:pointcut id="txServicePointcut" expression="execution(* com.stone.db.proxy.service..*.*(..))"/>
+        <aop:pointcut id="txTaskPointcut" expression="execution(* com.stone.db.proxy.task..*.*(..))"/>
 
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txServicePointcut"/>
-        <aop:advisor advice-ref="taskTxAdvice" pointcut-ref="txTaskPointcut"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txTaskPointcut"/>
     </aop:config>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
@@ -122,19 +141,19 @@
     </bean>
 
     <bean id="taskJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="taskDataSource"/>
+        <property name="dataSource" ref="dataSourceProxy"/>
     </bean>
 
-    <bean id="dataSourceClusterInitListener" class="com.stone.db.proxy.listener.DataSourceClusterInitListener">
-        <property name="user" value="${connection.slave3.username}"/>
-        <property name="password" value="${connection.slave3.password}"/>
-        <property name="urlSource" value="${connection.master.url}"/>
-        <property name="urlTargets" >
-            <array>
-                <value>"${connection.slave.url}"</value>
-                <value>"${connection.slave2.url}"</value>
-                <value>"${connection.slave3.url}"</value>
-            </array>
-        </property>
-    </bean>
+    <!--<bean id="dataSourceClusterInitListener" class="com.stone.db.proxy.listener.DataSourceClusterInitListener">-->
+        <!--<property name="user" value="${connection.slave3.username}"/>-->
+        <!--<property name="password" value="${connection.slave3.password}"/>-->
+        <!--<property name="urlSource" value="${connection.master.url}"/>-->
+        <!--<property name="urlTargets" >-->
+            <!--<array>-->
+                <!--<value>"${connection.slave.url}"</value>-->
+                <!--<value>"${connection.slave2.url}"</value>-->
+                <!--<value>"${connection.slave3.url}"</value>-->
+            <!--</array>-->
+        <!--</property>-->
+    <!--</bean>-->
 </beans>
