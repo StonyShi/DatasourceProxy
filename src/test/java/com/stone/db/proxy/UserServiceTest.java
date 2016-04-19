@@ -53,18 +53,9 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
-    @BeforeClass
-    public static void beforeClass() {
-        try {
-            Log4jConfigurer.initLogging("classpath:config/log4j.xml");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-//        this.mockMvc = webAppContextSetup(this.wac).build();
-    }
-    public static final AtomicInteger sequence = new AtomicInteger(10000);
+    public static final AtomicInteger sequence = new AtomicInteger(18000);
     @Rollback(true)
-    @Repeat(103)
+    @Repeat(5)
     @Test
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public void queryMax(){

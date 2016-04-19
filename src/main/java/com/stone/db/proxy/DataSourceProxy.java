@@ -25,8 +25,8 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     private DataSource[] slaves;
     private int slavesCount = 0;
     private int mastersCount = 0;
-    private AtomicInteger slaveRequest = new AtomicInteger(1);
-    private AtomicInteger masterRequest = new AtomicInteger(1);
+    private AtomicInteger slaveRequest = new AtomicInteger(0);
+    private AtomicInteger masterRequest = new AtomicInteger(0);
     private final Object slave_monitor = new Object();
     private final Object master_monitor = new Object();
     /** 最大请求次数 **/
@@ -113,15 +113,15 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     private DataSource determineMasterDataSource() {
         int index = masterRequest.incrementAndGet() % mastersCount;
         if(index == MAX_REQUEST){
-            logger.info("Master Request count rest is 1.");
-            masterRequest.set(1);
+            logger.info("Master Request count rest to 0.");
+            masterRequest.set(0);
         }
         if(index < 0) index = - 0;
         DataSource ds;
         synchronized (master_monitor){
             ds = this.masters[index];
         }
-        logger.info(">>> STATUS isMaster current determine db is masters request count {}", masterRequest.get());
+        logger.info(">>> STATUS isMaster[{}] current determine db is masters request count {}",index, masterRequest.get());
         return ds;
     }
 
@@ -132,15 +132,15 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     private DataSource determineSlaveDataSource() {
         int index = slaveRequest.incrementAndGet() % slavesCount;
         if(index == MAX_REQUEST){
-            logger.info("Slave Request count rest is 1.");
-            slaveRequest.set(1);
+            logger.info("Slave Request count rest to 0.");
+            slaveRequest.set(0);
         }
         if(index < 0) index = - 0;
         DataSource ds;
         synchronized (slave_monitor){
             ds = this.slaves[index];
         }
-        logger.info(">>> STATUS isSlave current determine db is slaves request count {}", slaveRequest.get());
+        logger.info(">>> STATUS isSlave[{}] current determine db is slaves request count {}",index, slaveRequest.get());
         return ds;
     }
 
