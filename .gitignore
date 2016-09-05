@@ -1,7 +1,7 @@
 /target
 target/
 .idea
-springmvc.iml
+DatasourceProxy.iml
 
 *.class
 
