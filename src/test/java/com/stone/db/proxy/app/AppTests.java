@@ -32,8 +32,8 @@ public class AppTests {
     @Autowired
     protected WebApplicationContext wac;
 
-    @BeforeClass
-    public void setup() {
+    @Before
+    public  void setup() {
         try {
             Log4jConfigurer.initLogging("classpath:config/log4j.xml");
         } catch (FileNotFoundException e) {

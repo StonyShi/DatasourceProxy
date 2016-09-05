@@ -1,0 +1,3 @@
+http\://localhost\:8086/schema/cachez@name=cachez Namespace
+http\://localhost\:8086/schema/cachez@prefix=cachez
+http\://localhost\:8086/schema/cachez@icon=com/stone/db/proxy/config/stone-cachez.gif

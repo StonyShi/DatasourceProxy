@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- ===================================================================== -->
+<!-- -->
+<!-- Log4j Configuration -->
+<!-- -->
+<!-- ===================================================================== -->
+
+<!-- | For more configuration infromation and examples see the Jakarta Log4j 
+	| owebsite: http://jakarta.apache.org/log4j -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+	debug="false">
+
+	<!-- ============================== -->
+	<!-- Append messages to the console -->
+	<!-- ============================== -->
+
+	<!--<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender"> <param 
+		name="Target" value="System.out"/> <layout class="org.apache.log4j.PatternLayout"> 
+		The default pattern: Date Priority [Category] Message\n [framework] %d - 
+		%-4r [%t] %-5p %c %x - %m%n [start]%d{DATE}[DATE]%n%p[PRIORITY]%n%x[NDC]%n%t[THREAD] 
+		n%c[CATEGORY]%n%m[MESSAGE]%n%n [%d{yyy MMM dd HH:mm:ss,SSS} IN %r] [%-5p] 
+		[%C$%-12M(%l) in thread $t]: %m%n <param name="ConversionPattern" value="[%d{yyyy年MMMdd日HH:mm:ss,SSS}] 
+		[%-5p] : %m%n" /> <param name="ConversionPattern" value="[%d{yyyy年MMMdd日HH:mm:ss,SSS}] 
+		[%-5p] [%C.%-12M(%L)]: %m%n" /> param name="ConversionPattern" value="%d{ABSOLUTE} 
+		%-5p [%c{1}] %m%n"/ </layout> </appender> -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] %c{3\} - %m%n" />
+		</layout>
+		<!--限制输出级别 -->
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="ERROR" />
+			<param name="LevelMin" value="TRACE" />
+		</filter>
+	</appender>
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.home}//logs//catalina.out" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Threshold" value="ALL" />
+		<!--param name="MaxFileSize" value="51200KB"/ -->
+		<!--param name="MaxBackupIndex" value="1000"/ -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%d{MMdd HH:mm:ss SSS\} %-5p] %c{3\} - %m%n" />
+		</layout>
+		<!--限制输出级别 -->
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="ERROR" />
+			<param name="LevelMin" value="TRACE" />
+		</filter>
+	</appender>
+
+	<appender name="performence.monitor.file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${catalina.home}//logs//performece.out" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Threshold" value="ALL" />
+		<param name="Append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} : %m%n" />
+		</layout>
+	</appender>
+
+
+	<!-- ================ -->
+	<!-- Limit categories -->
+	<!-- ================ -->
+
+	<logger name="monitor">
+		<level value="debug" />
+		<appender-ref ref="performence.monitor.file" />
+	</logger>
+	<!--<logger additivity="false" name="logger.org.springframework.aop.interceptor"> 
+		<level value="TRACE"/> <appender-ref ref="CONSOLE"/> <appender-ref ref="activexAppender"/> 
+		</logger> --><!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
+	<category name="framelib">
+		<priority value="INFO" />
+	</category>
+	<category name="project">
+		<priority value="INFO" />
+	</category>
+
+	<category name="com.ichinait.car.domain.repository">
+		<priority value="debug" />
+	</category>
+
+	<category name="com.ibatis">
+		<priority value="debug" />
+	</category>
+
+	<category name="com.ibatis.common.jdbc.SimpleDataSource">
+		<priority value="debug" />
+	</category>
+
+	<category name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate">
+		<priority value="debug" />
+	</category>
+
+	<category name="java.sql.Connection">
+		<priority value="debug" />
+	</category>
+
+	<category name="java.sql.Statement">
+		<priority value="debug" />
+	</category>
+	<category name="java.sql.PreparedStatement">
+		<priority value="debug" />
+	</category>
+	
+	<category name="org.springframework">
+		<priority value="ERROR" />
+
+	</category>
+	<category name="org.apache.activemq">
+		<priority value="ERROR" />
+	</category>
+	<category name="com.mchange">
+		<priority value="ERROR" />
+	</category>
+	<category name="org.quartz">
+		<priority value="ERROR" />
+	</category>
+	<logger name="org.mongodb.driver.connection" level="WARN" additivity="false"/>
+    <logger name="org.mongodb.driver.cluster" level="WARN" additivity="false"/>
+    <logger name="org.mongodb.driver.protocol" level="WARN" additivity="false"/>
+    <logger name="org.mongodb.driver.operation" level="WARN" additivity="false"/>
+    
+	<!-- ======================= -->
+	<!-- Setup the Root category -->
+	<!-- ======================= -->
+
+	<root>
+		<priority value="debug" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+</log4j:configuration>

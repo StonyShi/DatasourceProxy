@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.stone.db.proxy.support.hessian.HessianClientScannerConfigurer">
+        <property name="basePackage" value="com.**.remote"></property>
+        <property name="annotationClass" value="com.hunteron.core.Hessian"></property>
+        <property name="locations">
+            <list>
+                <value>classpath:config/hessian.client.properties</value>
+            </list>
+        </property>
+    </bean>
+</beans>

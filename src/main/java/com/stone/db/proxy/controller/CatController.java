@@ -24,7 +24,7 @@ public class CatController {
     private ICatService catService;
 
     @RequestMapping("/{uid}")
-    public void getCat(HttpServletRequest request, final @PathVariable("uid") long uid){
+    public void getCat(HttpServletRequest request, final @PathVariable("uid") int uid){
         asyncControllerContext.submit(request, new CanceledCallable(request.getAsyncContext()) {
             @Override
             public Object call() throws Exception {

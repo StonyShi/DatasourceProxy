@@ -12,7 +12,7 @@ public class FarTest {
         String host = "localhost";
         int port = 9001;
         FarExport.server(port);
-        FarExport.register(IUserService.class.getName(),UserService.class);
+        FarExport.register(IUserService.class.getName(), UserService.class);
         for (int i = 0; i < 10; i++){
             IUserService userService = (IUserService) FarImport.invoker(IUserService.class,host,port);
             userService.task("wash face.");

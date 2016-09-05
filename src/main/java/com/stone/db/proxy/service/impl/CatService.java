@@ -18,12 +18,15 @@ public class CatService implements ICatService {
     CatMapper catMapper;
 
     @Override
-    public Object getCat(long uid) {
-        return null;
+    public Cat getCat(Integer uid) {
+        return catMapper.getCatById(uid);
     }
 
     @Override
     public int saveCat(Cat cat) {
         return catMapper.insert(cat);
     }
+
+
+
 }

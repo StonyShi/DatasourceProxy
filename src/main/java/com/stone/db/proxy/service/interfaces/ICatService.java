@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 public interface ICatService {
 
 
-    public Object getCat(long uid);
+    public Cat getCat(Integer uid);
 
     public int saveCat(Cat cat);
 }

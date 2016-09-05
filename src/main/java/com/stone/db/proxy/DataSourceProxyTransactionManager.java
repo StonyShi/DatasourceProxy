@@ -2,7 +2,6 @@ package com.stone.db.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
@@ -25,87 +24,116 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  *
  * Created by ShiHui on 2016/1/9.
  */
-public class DataSourceProxyTransactionManager extends DataSourceTransactionManager {
+public class DataSourceProxyTransactionManager extends DataSourceRoutingTransactionManager {
 
     private static Logger logger = LoggerFactory.getLogger(DataSourceProxyTransactionManager.class);
 
-    @Override
     protected Object doGetTransaction() {
-        logger.debug(">>> doGetTransaction.");
+        logger.debug(">>> 获得事务.");
+        DataSourceProxyManager.setSuspendedTransactionActive(getDataSource(),false);
         return super.doGetTransaction();
     }
-
-    /**
-     * @param transaction
-     * @param definition PROPAGATION_REQUIRED || PROPAGATION_REQUIRES_NEW  || PROPAGATION_NESTED
-     */
+    @Override
+    protected boolean isExistingTransaction(Object transaction) {
+        boolean isExisting = super.isExistingTransaction(transaction);
+        if(isExisting) {
+            logger.debug(">>> 存在事务.");
+        }
+        return isExisting;
+    }
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition) {
-        logger.info(">>> doBegin transaction : {}, definition : {}",transaction,definition);
-        logger.debug(">>> TransactionDefinition[name = {}, level = {}, propagation = {}, propagation = {}, isReadOnly = {}]"
+        logger.info(">>> 开始事务.");
+        logger.debug(">>> TransactionDefinition[name = {}, level = {}, propagation = {}, isReadOnly = {}]"
                 ,definition.getName()
                 ,getIsolationLevelName(definition.getIsolationLevel())
                 ,getPropagationBehaviorName(definition.getPropagationBehavior())
                 ,definition.isReadOnly());
         determineDataSource(definition);
+        DataSourceProxyManager.requestedTransaction();
         super.doBegin(transaction, definition);
+    }
+    @Override
+    protected void doCommit(DefaultTransactionStatus status) {
+        logger.debug(">>> 提交事务.{}",status);
+        if(DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())){
+            logger.debug(">>> 存在挂起事务，暂不提交.");
+            return;
+        }else{
+            logger.debug(">>> 提交挂起事务.");
+        }
+        super.doCommit(status);
+        DataSourceProxyManager.commitSuspendedConnection();
+        DataSourceProxyManager.commitFinallyConnection();
+    }
+
+    @Override
+    protected void doRollback(DefaultTransactionStatus status) {
+        logger.debug(">>> 回滚事务.{}",status);
+        if(DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())){
+            logger.debug(">>> 存在挂起事务，暂不回滚.");
+            return;
+        }else{
+            logger.debug(">>> 回滚挂起事务.");
+        }
+        super.doRollback(status);
+        DataSourceProxyManager.rollbackSuspendedConnection();
+        DataSourceProxyManager.rollbackFinallyConnection();
+    }
+
+    @Override
+    protected void doResume(Object transaction, Object suspendedResources) {
+        logger.debug(">>> 恢复事务. transaction = {}, suspendedResources = {}", transaction,suspendedResources);
+        if(DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())){
+            DataSourceProxyManager.setSuspendedTransactionActive(getDataSource(), false);
+        }
+        super.doResume(transaction, suspendedResources);
+    }
+
+    @Override
+    protected Object doSuspend(Object transaction) {
+        logger.debug(">>> 挂起事务. {}",transaction);
+        DataSourceProxyManager.setSuspendedTransactionActive(getDataSource(), true);
+        return super.doSuspend(transaction);
     }
     /**
      * Initialize transaction synchronization as appropriate.
      */
     @Override
     protected void prepareSynchronization(DefaultTransactionStatus status, TransactionDefinition definition) {
-        logger.info("Initialize transaction synchronization as appropriate.");
-        logger.debug(">>> prepareSynchronization status : {}, definition : {}", status, definition);
+        logger.info(">>> DefaultTransactionStatus[newTransaction = {}, newSynchronization = {}, readOnly = {}, debug = {}, point = {}]",
+                status.isNewTransaction(),status.isNewSynchronization(),status.isReadOnly(), status.isDebug(),definition.getName()
+        );
+//        logger.debug(">>> TransactionDefinition[name = {}, level = {}, propagation = {}, isReadOnly = {}]"
+//                ,definition.getName()
+//                ,getIsolationLevelName(definition.getIsolationLevel())
+//                ,getPropagationBehaviorName(definition.getPropagationBehavior())
+//                ,definition.isReadOnly());
         determineDataSource(definition);
         super.prepareSynchronization(status, definition);
     }
     private void determineDataSource(TransactionDefinition definition){
-        if(DataSourceProxyManager.isNone()){
-            if(definition.isReadOnly()){
-                DataSourceProxyManager.markSlave();
-                logger.debug(">>> markSlave because readOnly = {}", definition.isReadOnly());
-            }else{
-                DataSourceProxyManager.markMaster();
-                logger.debug(">>> markMaster because readOnly = {}", definition.isReadOnly());
-            }
+        if (definition.isReadOnly()) {
+            DataSourceProxyManager.markSlave();
+            logger.info(">>> 选择从库 because readOnly is {} in [{}]", definition.isReadOnly(), definition.getName());
+        } else {
+            DataSourceProxyManager.markMaster();
+            logger.info(">>> 选择主库 because readOnly is {} in [{}]", definition.isReadOnly(), definition.getName());
         }
     }
     @Override
-    protected void doCommit(DefaultTransactionStatus status) {
-        logger.debug(">>> doCommit");
-        super.doCommit(status);
-    }
-
-    @Override
-    protected void doRollback(DefaultTransactionStatus status) {
-        logger.debug(">>> doRollback");
-        super.doRollback(status);
-    }
-
-    @Override
-    protected void doResume(Object transaction, Object suspendedResources) {
-        logger.debug(">>> doResume");
-        super.doResume(transaction, suspendedResources);
-    }
-
-    @Override
-    protected Object doSuspend(Object transaction) {
-        logger.debug(">>> doSuspend");
-        return super.doSuspend(transaction);
-    }
-
-    @Override
     protected void doCleanupAfterCompletion(Object transaction) {
+        logger.debug(">>> 清理事务 DataSourceProxyManager holder by {}", DataSourceProxyManager.getType());
         DataSourceProxyManager.rest();
-        logger.debug(">>> doCleanupAfterCompletion before rest DataSource STATUS");
+        if(DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())){
+            logger.debug(">>> 存在挂起事务，暂不清理..");
+        }else{
+            logger.debug(">>> 清理挂起事务.");
+            DataSourceProxyManager.cleanupAfterCompletion();
+        }
+        DataSourceProxyManager.releasedTransaction();
         super.doCleanupAfterCompletion(transaction);
-    }
-    @Override
-    protected boolean isExistingTransaction(Object transaction) {
-        boolean isExisting = super.isExistingTransaction(transaction);
-        logger.debug(">>> isExistingTransaction : {}", isExisting);
-        return isExisting;
+        DataSourceProxyManager.cleanupAfterFinallyCompletion();
     }
 
     private String getIsolationLevelName(int code){

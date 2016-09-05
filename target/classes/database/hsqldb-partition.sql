@@ -1,0 +1,40 @@
+CREATE TABLE clients (
+    id INT,
+    fname VARCHAR(30),
+    lname VARCHAR(30),
+    signed DATE
+)
+PARTITION BY HASH( MONTH(signed) )
+PARTITIONS 12;
+CREATE TABLE IF NOT EXISTS login_log (
+    id int not null IDENTITY,
+    ip varchar(80),
+    create_date TIMESTAMP
+    ,constraint pk_login_log primary key (id)
+)
+PARTITION BY RANGE (YEAR(create_date)) (
+    PARTITION p1999 VALUES IN (1995, 1999, 2003),
+    PARTITION p2000 VALUES IN (1996, 2000, 2004),
+    PARTITION p2001 VALUES IN (1997, 2001, 2005),
+    PARTITION p2000 VALUES IN (1998, 2002, 2006)
+);
+ CREATE TABLE IF NOT EXISTS accont (
+  id INT,
+  name VARCHAR(30),
+  birthday DATE
+ )
+ PARTITION BY LIST(MONTH(birthday))
+ (
+  PARTITION Rat VALUES IN (1),
+  PARTITION Ox  VALUES IN (2),
+  PARTITION Tiger  VALUES IN (3),
+  PARTITION Rabbit  VALUES IN (4),
+  PARTITION Dragon  VALUES IN (5),
+  PARTITION Snake  VALUES IN (6),
+  PARTITION Horse  VALUES IN (7),
+  PARTITION Goat  VALUES IN (8),
+  PARTITION Money  VALUES IN (9),
+  PARTITION Rooster  VALUES IN (10),
+  PARTITION Dog  VALUES IN (11),
+  PARTITION Pig  VALUES IN (12)
+ );

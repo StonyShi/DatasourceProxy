@@ -9,15 +9,13 @@ import org.springframework.util.Assert;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by ShiHui on 2016/1/9.
  */
-public class DataSourceProxy extends AbstractDataSource implements InitializingBean{
+public class DataSourceProxy extends AbstractDataSource implements InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(DataSourceProxy.class);
 
@@ -147,7 +145,34 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     @Override
     public Connection getConnection() throws SQLException {
         logger.debug("Enter");
-        return determineDataSource().getConnection();
+        Connection conn = null;
+        if(DataSourceProxyManager.isMaster()) {
+            //先从本地线程获取Master Connection
+            conn = DataSourceProxyManager.getMasterConnection(this);
+            if(null == conn){
+                conn = determineDataSource().getConnection();
+                DataSourceProxyManager.setMasterConnection(this,conn);
+            }
+            if(conn.isClosed()){
+                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType());
+                conn = determineDataSource().getConnection();
+            }
+        }else{
+            conn = DataSourceProxyManager.getSlaveConnection(this);
+            if(null == conn){
+                conn = determineSlaveDataSource().getConnection();
+                DataSourceProxyManager.setSlaveConnection(this,conn);
+            }
+            if(conn.isClosed()){
+                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType());
+                conn = determineSlaveDataSource().getConnection();
+            }
+        }
+        if(conn.getAutoCommit()){
+            conn.setAutoCommit(false);
+        }
+        logger.info("conn = {} by {}", conn, DataSourceProxyManager.getType());
+        return conn;
     }
 
     @Override
