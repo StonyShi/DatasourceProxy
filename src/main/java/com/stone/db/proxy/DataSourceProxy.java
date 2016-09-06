@@ -5,17 +5,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.util.Assert;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
- * Created by ShiHui on 2016/1/9.
+ * <p>Created with IntelliJ IDEA. </p>
+ * <p>User: Stony </p>
+ * <p>Date: 2016/1/9 </p>
+ * <p>Time: 10:47 </p>
+ * <p>Version: 1.0.1 </p>
  */
-public class DataSourceProxy extends AbstractDataSource implements InitializingBean {
+public class DataSourceProxy extends AbstractDataSource implements InitializingBean{
 
     private static Logger logger = LoggerFactory.getLogger(DataSourceProxy.class);
 
@@ -29,7 +35,6 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     private final Object master_monitor = new Object();
     /** 最大请求次数 **/
     public static final int MAX_REQUEST = (Integer.MAX_VALUE-3);
-
 
     public void setMaster(DataSource ds) {
         Assert.notNull(ds, "setMaster arg ds must not null.");
@@ -93,14 +98,15 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
         return slaves;
     }
     private DataSource determineDataSource(){
-        if(DataSourceProxyManager.isNone()){
+        if(DataSourceProxyManager.isNone(this)){
             logger.debug(">>> STATUS isNone current determine db is master");
             return determineMasterDataSource();
         }
-        if(DataSourceProxyManager.isMaster()){
+        if(DataSourceProxyManager.isMaster(this)){
             logger.debug(">>> STATUS isMaster current determine db is master");
             return determineMasterDataSource();
         }
+        logger.debug(">>> STATUS isSlave current determine db is slave");
         return determineSlaveDataSource();
     }
 
@@ -146,32 +152,43 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
     public Connection getConnection() throws SQLException {
         logger.debug("Enter");
         Connection conn = null;
-        if(DataSourceProxyManager.isMaster()) {
+        boolean isNewConnection = false;
+        if (DataSourceProxyManager.isSlave(this)) {
+            conn = DataSourceProxyManager.getSlaveConnection(this);
+            if (null == conn) {
+                conn = determineDataSource().getConnection();
+                isNewConnection = true;
+            }
+            if (conn.isClosed()) {
+                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType(this));
+                conn = determineDataSource().getConnection();
+                isNewConnection = true;
+            }
+            if (isNewConnection) {
+                DataSourceProxyManager.setSlaveConnection(this, conn);
+            }
+        } else {
             //先从本地线程获取Master Connection
             conn = DataSourceProxyManager.getMasterConnection(this);
-            if(null == conn){
+            if (null == conn) {
                 conn = determineDataSource().getConnection();
-                DataSourceProxyManager.setMasterConnection(this,conn);
+                isNewConnection = true;
             }
-            if(conn.isClosed()){
-                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType());
+            if (conn.isClosed()) {
+                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType(this));
                 conn = determineDataSource().getConnection();
+                isNewConnection = true;
             }
-        }else{
-            conn = DataSourceProxyManager.getSlaveConnection(this);
-            if(null == conn){
-                conn = determineSlaveDataSource().getConnection();
-                DataSourceProxyManager.setSlaveConnection(this,conn);
-            }
-            if(conn.isClosed()){
-                logger.info("conn is closed by {}", conn, DataSourceProxyManager.getType());
-                conn = determineSlaveDataSource().getConnection();
+            if (isNewConnection) {
+                if(DataSourceProxyManager.isMaster(this)) {
+                    if (conn.getAutoCommit()) {
+                        conn.setAutoCommit(false);
+                    }
+                }
+                DataSourceProxyManager.setMasterConnection(this, conn);
             }
         }
-        if(conn.getAutoCommit()){
-            conn.setAutoCommit(false);
-        }
-        logger.info("conn = {} by {}", conn, DataSourceProxyManager.getType());
+        logger.info("conn = {} isNew [{}] by {}", conn, isNewConnection, DataSourceProxyManager.getType(this));
         return conn;
     }
 

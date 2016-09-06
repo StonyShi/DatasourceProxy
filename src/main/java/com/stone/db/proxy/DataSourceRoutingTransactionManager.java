@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.ResourceTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -24,7 +25,7 @@ import java.sql.SQLException;
  * <p>User: Stony </p>
  * <p>Date: 2016/8/5 </p>
  * <p>Time: 15:54 </p>
- * <p>Version: 1.0 </p>
+ * <p>Version: 1.0.1 </p>
  */
 public class DataSourceRoutingTransactionManager extends AbstractRoutingTransactionManager implements ResourceTransactionManager, InitializingBean {
 
@@ -189,7 +190,7 @@ public class DataSourceRoutingTransactionManager extends AbstractRoutingTransact
         try {
             Method method = connectionHolder.getClass().getDeclaredMethod("isTransactionActive");
             method.setAccessible(true);
-            return (Boolean) method.invoke(connectionHolder,new Object[0]);
+            return (boolean) method.invoke(connectionHolder,new Object[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -218,8 +219,7 @@ public class DataSourceRoutingTransactionManager extends AbstractRoutingTransact
             logger.debug("提交 JDBC transaction on Connection [" + con + "]");
         }
         try {
-//            con.commit();
-            DataSourceProxyManager.commit(con);
+            con.commit();
         } catch (SQLException ex) {
             throw new TransactionSystemException("Could not commit JDBC transaction", ex);
         }
@@ -233,8 +233,7 @@ public class DataSourceRoutingTransactionManager extends AbstractRoutingTransact
             logger.debug("回滚 JDBC transaction on Connection [" + con + "]");
         }
         try {
-//            con.rollback();
-            DataSourceProxyManager.rollback(con);
+            con.rollback();
         } catch (SQLException ex) {
             throw new TransactionSystemException("Could not roll back JDBC transaction", ex);
         }
@@ -262,7 +261,7 @@ public class DataSourceRoutingTransactionManager extends AbstractRoutingTransact
         // Reset connection.
         Connection con = txObject.getConnectionHolder().getConnection();
         try {
-            if (txObject.isMustRestoreAutoCommit()) {
+            if (txObject.isMustRestoreAutoCommit() && !DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())) {
                 con.setAutoCommit(true);
             }
             DataSourceUtils.resetConnectionAfterTransaction(con, txObject.getPreviousIsolationLevel());

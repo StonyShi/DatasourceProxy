@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.Constants;
 import org.springframework.transaction.*;
 import org.springframework.transaction.support.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -16,7 +15,7 @@ import java.util.List;
  * <p>User: Stony </p>
  * <p>Date: 2016/8/5 </p>
  * <p>Time: 15:47 </p>
- * <p>Version: 1.0 </p>
+ * <p>Version: 1.0.1 </p>
  */
 public abstract class AbstractRoutingTransactionManager implements PlatformTransactionManager, Serializable {
     /**
@@ -927,7 +926,7 @@ public abstract class AbstractRoutingTransactionManager implements PlatformTrans
      * @param synchronizations List of TransactionSynchronization objects
      * @param completionStatus the completion status according to the
      * constants in the TransactionSynchronization interface
-     * @see #registerAfterCompletionWithExistingTransaction(Object, List)
+     * @see #registerAfterCompletionWithExistingTransaction(Object, java.util.List)
      * @see TransactionSynchronization#STATUS_COMMITTED
      * @see TransactionSynchronization#STATUS_ROLLED_BACK
      * @see TransactionSynchronization#STATUS_UNKNOWN
@@ -1176,7 +1175,7 @@ public abstract class AbstractRoutingTransactionManager implements PlatformTrans
      * @param transaction transaction object returned by {@code doGetTransaction}
      * @param synchronizations List of TransactionSynchronization objects
      * @throws TransactionException in case of system errors
-     * @see #invokeAfterCompletion(List, int)
+     * @see #invokeAfterCompletion(java.util.List, int)
      * @see TransactionSynchronization#afterCompletion(int)
      * @see TransactionSynchronization#STATUS_UNKNOWN
      */

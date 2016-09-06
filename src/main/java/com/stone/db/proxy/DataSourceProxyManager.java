@@ -9,10 +9,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ShiHui on 2016/1/9.
+ * <p>Created with IntelliJ IDEA. </p>
+ * <p>User: Stony </p>
+ * <p>Date: 2016/1/9 </p>
+ * <p>Time: 10:47 </p>
+ * <p>Version: 1.0.1 </p>
  */
 public class DataSourceProxyManager {
     private static final Logger logger = LoggerFactory.getLogger(DataSourceProxyManager.class);
@@ -21,7 +24,10 @@ public class DataSourceProxyManager {
     private enum DataSourceType{
         MASTER,SLAVE,ALWAYS_MASTER
     }
-    private static ThreadLocal<DataSourceType> holder = new ThreadLocal<DataSourceType>();
+    /** holder Current Thread connection status **/
+    private static ThreadLocal<Map<Object, DataSourceType>> holder =
+            new NamedThreadLocal<Map<Object, DataSourceType>>("Current connection status");
+
     /** holder Current Thread master connection **/
     private static ThreadLocal<Map<Object, Connection>> masterConnectionHolder =
             new NamedThreadLocal<Map<Object, Connection>>("Current master transaction connection");
@@ -36,48 +42,65 @@ public class DataSourceProxyManager {
     private static final ThreadLocal<Map<Object, Connection>> currentSuspendedConnection =
             new NamedThreadLocal<Map<Object, Connection>>("Current suspended transaction connection");
 
-
-    private static final ThreadLocal<ProxyTransactionRequestHolder> currentTransactionRequestHolder =
-            new NamedThreadLocal<ProxyTransactionRequestHolder>("Current transaction transaction request count");
-
-
-
-    public static boolean isMaster(){
-        return DataSourceType.ALWAYS_MASTER == holder.get() || DataSourceType.MASTER == holder.get();
-    }
-    public static boolean isNone(){
-        return null == holder.get();
-    }
-    public static void markSlave() {
-        if(DataSourceType.SLAVE == holder.get()) return;
-        holder.set(DataSourceType.SLAVE);
-    }
-    public static void markMaster(){
-        if(DataSourceType.MASTER == holder.get()) return;
-        holder.set(DataSourceType.MASTER);
-    }
-    public static void rest(){
-        holder.set(null);
-    }
-    public static void alwaysMaster(){
-        holder.set(DataSourceType.ALWAYS_MASTER);
-    }
-
-    public static DataSourceType getType() {
-        return holder.get();
-    }
-    public static void clearMasterAndSlaveConnection(Object key){
-        //清理master Connection
-        Map<Object, Connection> master = masterConnectionHolder.get();
-        if(null != master){
-            master.remove(key);
+    public static boolean isSlave(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            return false;
         }
-        //清理slave Connection
-        Map<Object, Connection> slave = slaveConnectionHolder.get();
-        if(null != slave){
-            slave.remove(key);
+        return DataSourceType.SLAVE == map.get(key);
+    }
+    public static boolean isMaster(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            return false;
+        }
+        return DataSourceType.ALWAYS_MASTER == map.get(key) || DataSourceType.MASTER == map.get(key);
+    }
+    public static boolean isNone(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        return (map == null) || (null == map.get(key));
+    }
+    public static void markSlave(Object key) {
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            map = new HashMap<Object, DataSourceType>();
+            holder.set(map);
+        }
+        Object oldValue = map.put(key, DataSourceType.SLAVE);
+    }
+    public static void markMaster(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            map = new HashMap<Object, DataSourceType>();
+            holder.set(map);
+        }
+        Object oldValue = map.put(key, DataSourceType.MASTER);
+    }
+    public static void rest(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        if((null != map) && (!map.isEmpty())) {
+            map.remove(key);
+        }else{
+            holder.set(null);
         }
     }
+    public static void alwaysMaster(Object key){
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            map = new HashMap<Object, DataSourceType>();
+            holder.set(map);
+        }
+        Object oldValue = map.put(key, DataSourceType.ALWAYS_MASTER);
+    }
+
+    public static DataSourceType getType(Object key) {
+        Map<Object, DataSourceType> map = holder.get();
+        if (map == null) {
+            return null;
+        }
+        return map.get(key);
+    }
+
     public static Connection getMasterConnection(Object key) {
         Map<Object, Connection> map = masterConnectionHolder.get();
         // set ThreadLocal Map if none found
@@ -135,7 +158,7 @@ public class DataSourceProxyManager {
         }else{
             isAvtive =  (map.get(key) != null);
         }
-        logger.debug("挂起事务活动 is [{}] for key [{}] in map {}.", isAvtive, map);
+        logger.debug("挂起事务活动 is [{}] for key [{}] in map {}.", isAvtive,key, map);
         return isAvtive;
     }
     public static boolean hasSuspendedTransactionActive(){
@@ -163,39 +186,6 @@ public class DataSourceProxyManager {
         logger.trace("挂起事务连接 [{}] for key [{}] in map {}.", conn, key, map);
     }
 
-    /**
-     * 释放挂起连接
-     * 清理挂起线程数据
-     */
-    public static void cleanupAfterCompletion(){
-//        closeMasterAndSlaveConnection();
-        logger.debug("保存挂起活动 {}.",currentSuspendedTransactionActive.get());
-        logger.debug("保存挂起连接 {}.",currentSuspendedConnection.get());
-        logger.debug("保存Master连接 {}.",masterConnectionHolder.get());
-        logger.debug("保存Salve连接 {}.",slaveConnectionHolder.get());
-        closeSuspendedConnection();
-    }
-
-    /**
-     * 最后清理master/slave 保存连接
-     */
-   public static void cleanupAfterFinallyCompletion(){
-       closeMasterAndSlaveConnection();
-       slaveConnectionHolder.set(null);
-       masterConnectionHolder.set(null);
-       currentTransactionRequestHolder.set(null);
-   }
-    /**
-     * 释放连接
-     */
-    public static void closeMasterAndSlaveConnection(){
-        if(null != masterConnectionHolder.get()){
-            closeConnectionByMap(masterConnectionHolder.get());
-        }
-        if(null != slaveConnectionHolder.get()){
-            closeConnectionByMap(slaveConnectionHolder.get());
-        }
-    }
 
     /**
      *
@@ -207,6 +197,8 @@ public class DataSourceProxyManager {
                 Connection conn;
                 for(Map.Entry<Object, Connection> e : map.entrySet()){
                     conn = e.getValue();
+                    //清理挂起事务连接
+                    removeSuspendedConnection(e.getKey());
                     close(conn);
                 }
             } catch (Throwable ex) {
@@ -214,49 +206,7 @@ public class DataSourceProxyManager {
             }
         }
     }
-    public static void commitFinallyConnection(){
-        if(null != masterConnectionHolder.get()){
-            commitConnectionByMap(masterConnectionHolder.get());
-        }
-        if(null != slaveConnectionHolder.get()){
-            commitConnectionByMap(slaveConnectionHolder.get());
-        }
-    }
-    static void commitConnectionByMap(Map<Object, Connection> map){
-        if((null != map) && (!map.isEmpty())){
-            try {
-                Connection conn;
-                for(Map.Entry<Object, Connection> e : map.entrySet()){
-                    conn = e.getValue();
-                    commit(conn);
-                }
-            } catch (Throwable ex) {
-                logger.debug("Could not commit JDBC Connection after transaction", ex);
-            }
-        }
-    }
 
-    public static void rollbackFinallyConnection(){
-        if(null != masterConnectionHolder.get()){
-            rollbackConnectionByMap(masterConnectionHolder.get());
-        }
-        if(null != slaveConnectionHolder.get()){
-            rollbackConnectionByMap(slaveConnectionHolder.get());
-        }
-    }
-    static void rollbackConnectionByMap(Map<Object, Connection> map){
-        if((null != map) && (!map.isEmpty())){
-            try {
-                Connection conn;
-                for(Map.Entry<Object, Connection> e : map.entrySet()){
-                    conn = e.getValue();
-                    rollback(conn);
-                }
-            } catch (Throwable ex) {
-                logger.debug("Could not rollback JDBC Connection after transaction", ex);
-            }
-        }
-    }
     /**
      * 清理挂起事务连接
      * @param key datasource
@@ -285,48 +235,197 @@ public class DataSourceProxyManager {
         }
     }
     public static void commitSuspendedConnection(){
-        commitConnectionByMap(currentSuspendedConnection.get());
+        Map<Object, Connection> map = currentSuspendedConnection.get();
+        logger.debug("提交挂起连接 {}",map);
+        if((null != map) && (!map.isEmpty())){
+            try {
+                Connection conn;
+                for(Map.Entry<Object, Connection> e : map.entrySet()){
+                    conn = e.getValue();
+                    commit(conn);
+                }
+            } catch (Throwable ex) {
+                logger.debug("Could not commit JDBC Connection after transaction", ex);
+            }
+        }
     }
     public static void rollbackSuspendedConnection(){
-        rollbackConnectionByMap(currentSuspendedConnection.get());
+        Map<Object, Connection> map = currentSuspendedConnection.get();
+        logger.debug("回滚挂起连接 {}",map);
+        if((null != map) && (!map.isEmpty())){
+            try {
+                Connection conn;
+                for(Map.Entry<Object, Connection> e : map.entrySet()){
+                    conn = e.getValue();
+                    rollback(conn);
+                }
+            } catch (Throwable ex) {
+                logger.debug("Could not rollback JDBC Connection after transaction", ex);
+            }
+        }
     }
 
-    public static void close(Connection conn) throws SQLException {
+
+    /**
+     * 关闭当前事务管理器连接
+     * @param key
+     */
+    public static void rollbackSlaveConnection(Object key) {
+        Map<Object,Connection> map = slaveConnectionHolder.get();
+        logger.debug("回滚Slave连接 {} by [{}].", map, key);
+        rollbackConnectionByKey(map, key);
+    }
+    public static void rollbackMasterConnection(Object key) {
+        Map<Object,Connection> map = masterConnectionHolder.get();
+        logger.debug("回滚Master连接 {} by [{}].", map, key);
+        rollbackConnectionByKey(map, key);
+    }
+    public static void rollbackSuspendedConnection(Object key){
+        Map<Object,Connection> map = currentSuspendedConnection.get();
+        logger.debug("回滚挂起连接 {} by [{}].", map, key);
+        rollbackConnectionByKey(map, key);
+    }
+    public static void rollbackConnectionByKey(Map<Object,Connection> map,Object key){
+        if((null != map) && (!map.isEmpty())){
+            Connection conn = map.get(key);
+            try{
+                rollback(conn);
+            } catch (Throwable ex) {
+                logger.debug("Could not rollback JDBC Connection after transaction", ex);
+            }
+        }
+    }
+    public static void rollbackSlaveConnection() {
+        Map<Object,Connection> map = slaveConnectionHolder.get();
+        logger.debug("回滚Slave连接 {} in ",map);
+        rollbackConnectionByMap(map);
+    }
+    public static void rollbackMasterConnection() {
+        Map<Object,Connection> map = masterConnectionHolder.get();
+        logger.debug("回滚Master连接 {} in ",map);
+        rollbackConnectionByMap(map);
+    }
+    public static void rollbackConnectionByMap(Map<Object,Connection> map){
+        if((null != map) && (!map.isEmpty())){
+            try {
+                Connection conn;
+                for(Map.Entry<Object, Connection> e : map.entrySet()){
+                    conn = e.getValue();
+                    rollback(conn);
+                }
+            } catch (Throwable ex) {
+                logger.debug("Could not commit JDBC Connection after transaction", ex);
+            }
+        }
+    }
+
+
+    /**
+     * 提交当前事务管理器连接
+     * @param key
+     */
+    public static void commitSlaveConnection(Object key){
+        Map<Object,Connection> map = slaveConnectionHolder.get();
+        logger.debug("提交Slave连接 {} by [{}].", map, key);
+        commitConnectionByKey(map,key);
+    }
+    public static void commitMasterConnection(Object key){
+        Map<Object,Connection> map = masterConnectionHolder.get();
+        logger.debug("提交Master连接 {} by [{}].", map, key);
+        commitConnectionByKey(map,key);
+    }
+    public static void commitSuspendedConnection(Object key){
+        Map<Object,Connection> map = currentSuspendedConnection.get();
+        logger.debug("提交挂起连接 {} by [{}].", map, key);
+        commitConnectionByKey(map, key);
+    }
+    public static void commitConnectionByKey(Map<Object,Connection> map,Object key){
+        if((null != map) && (!map.isEmpty())){
+            Connection conn = map.get(key);
+            try{
+                commit(conn);
+            } catch (Throwable ex) {
+                logger.debug("Could not commit JDBC Connection after transaction", ex);
+            }
+        }
+    }
+    /**
+     * 关闭当前事务管理器连接
+     * @param key
+     */
+    public static void cleanupSlaveConnection(Object key){
+        Map<Object,Connection> map = slaveConnectionHolder.get();
+        logger.debug("释放Slave连接 {} by [{}].", map, key);
+        closeConnectionByKey(map,key);
+        logger.debug("释放Slave连接完成 {} by [{}].", map, key);
+    }
+    public static void cleanupMasterConnection(Object key){
+        Map<Object,Connection> map = masterConnectionHolder.get();
+        logger.debug("释放Master连接 {} by [{}].", map, key);
+        closeConnectionByKey(map,key);
+        logger.debug("释放Master连接完成 {} by [{}].", map, key);
+    }
+    public static void cleanupSuspendedConnection(Object key){
+        Map<Object,Connection> mapConn = currentSuspendedConnection.get();
+        Map<Object,Boolean> mapActive = currentSuspendedTransactionActive.get();
+        logger.debug("释放挂起连接 {} by [{}].", mapConn, key);
+        logger.debug("释放挂起连接活动 {} by [{}].", mapActive, key);
+        closeConnectionByKey(mapConn, key);
+        closeConnectionActiveByKey(mapActive, key);
+        logger.debug("释放挂起连接完成 {} by [{}].", mapConn, key);
+        logger.debug("释放挂起连接活动完成 {} by [{}].", mapActive, key);
+        if(mapConn == null || mapConn.isEmpty()) {
+            currentSuspendedConnection.set(null);
+        }
+        if(mapActive == null || mapActive.isEmpty()) {
+            currentSuspendedTransactionActive.set(null);
+        }
+    }
+    public static void closeConnectionActiveByKey(Map<Object,Boolean> map, Object key){
+        if((null != map) && (!map.isEmpty())){
+            Boolean active = map.get(key);
+            if(active != null){
+                map.remove(key);
+            }
+            if(map.isEmpty()){
+                map.clear();
+            }
+        }
+    }
+    public static void closeConnectionByKey(Map<Object,Connection> map, Object key){
+        if((null != map) && (!map.isEmpty())){
+            Connection conn = map.get(key);
+            try{
+                close(conn);
+                if(conn != null){
+                    map.remove(key);
+                }
+                if(map.isEmpty()){
+                    map.clear();
+                }
+            } catch (Throwable ex) {
+                logger.debug("Could not close JDBC Connection after transaction", ex);
+            }
+        }
+    }
+    static void close(Connection conn) throws SQLException {
         if (conn != null && !conn.isClosed()) {
             logger.debug("释放 JDBC Connection [" + conn + "] after transaction");
             conn.close();
         }
     }
-    public static void rollback(Connection conn) throws SQLException {
+    static void rollback(Connection conn) throws SQLException {
         if ((conn != null) && (!conn.isClosed()) && (!conn.getAutoCommit())) {
             logger.debug("回滚 JDBC Connection [" + conn + "] after transaction");
             conn.rollback();
         }
     }
-    public static void commit(Connection conn) throws SQLException {
+    static void commit(Connection conn) throws SQLException {
         if ((conn != null) && (!conn.isClosed()) && (!conn.getAutoCommit())) {
             logger.debug("提交 JDBC Connection [" + conn + "] after transaction");
             conn.commit();
         }
     }
-
-    public static void requestedTransaction() {
-        ProxyTransactionRequestHolder holder = currentTransactionRequestHolder.get();
-        if(holder == null){
-            currentTransactionRequestHolder.set(new ProxyTransactionRequestHolder(Thread.currentThread().getName()));
-            holder = currentTransactionRequestHolder.get();
-        }
-        holder.requested();
-    }
-
-    public static void releasedTransaction() {
-        ProxyTransactionRequestHolder holder = currentTransactionRequestHolder.get();
-        if(holder != null){
-            holder.released();
-        }
-        logger.debug("释放事务引用 {}",holder);
-    }
-
     public static class ProxyConnectionHolder extends ResourceHolderSupport {
         Connection connection;
 
@@ -336,34 +435,6 @@ public class DataSourceProxyManager {
 
         public ProxyConnectionHolder(Connection connection) {
             this.connection = connection;
-        }
-    }
-
-    public static class ProxyTransactionRequestHolder {
-        String name;
-        int referenceCount = 0;
-        public ProxyTransactionRequestHolder(String name) {
-            this.name = name;
-            referenceCount = 0;
-        }
-        public String getName() {
-            return name;
-        }
-        public int getReferenceCount() {
-            return referenceCount;
-        }
-        public void requested() {
-            this.referenceCount++;
-        }
-        public void released() {
-            this.referenceCount--;
-        }
-        @Override
-        public String toString() {
-            return "ProxyTransactionRequestHolder{" +
-                    "referenceCount='" + referenceCount + '\'' +
-                    "name='" + name + '\'' +
-                    '}';
         }
     }
 }

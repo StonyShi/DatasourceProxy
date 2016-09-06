@@ -2,10 +2,18 @@ package com.stone.db.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
 /**
+ *
+ * <p>Created with IntelliJ IDEA. </p>
+ * <p>User: Stony </p>
+ * <p>Date: 2016/1/9 </p>
+ * <p>Time: 10:47 </p>
+ * <p>Version: 1.0.1 </p>
+ *
  * 1.事务管理由 TransactionInterceptor 拦截，执行invoke
  * 2.调用 TransactionAspectSupport#invokeWithinTransaction 实现环绕通知
  * 3.getTransaction>>doGetTransaction>>isExistingTransaction{
@@ -22,7 +30,6 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * 7.cleanupTransactionInfo
  * 8.commitTransactionAfterReturning>TransactionManager#commit
  *
- * Created by ShiHui on 2016/1/9.
  */
 public class DataSourceProxyTransactionManager extends DataSourceRoutingTransactionManager {
 
@@ -50,7 +57,6 @@ public class DataSourceProxyTransactionManager extends DataSourceRoutingTransact
                 ,getPropagationBehaviorName(definition.getPropagationBehavior())
                 ,definition.isReadOnly());
         determineDataSource(definition);
-        DataSourceProxyManager.requestedTransaction();
         super.doBegin(transaction, definition);
     }
     @Override
@@ -61,10 +67,11 @@ public class DataSourceProxyTransactionManager extends DataSourceRoutingTransact
             return;
         }else{
             logger.debug(">>> 提交挂起事务.");
+            DataSourceProxyManager.commitMasterConnection(getDataSource());
+            DataSourceProxyManager.commitSlaveConnection(getDataSource());
         }
         super.doCommit(status);
-        DataSourceProxyManager.commitSuspendedConnection();
-        DataSourceProxyManager.commitFinallyConnection();
+//        DataSourceProxyManager.commitSuspendedConnection();
     }
 
     @Override
@@ -75,10 +82,12 @@ public class DataSourceProxyTransactionManager extends DataSourceRoutingTransact
             return;
         }else{
             logger.debug(">>> 回滚挂起事务.");
+            DataSourceProxyManager.rollbackMasterConnection(getDataSource());
+            DataSourceProxyManager.rollbackSlaveConnection(getDataSource());
+            //DataSourceProxyManager.rollbackSuspendedConnection(getDataSource());
         }
         super.doRollback(status);
-        DataSourceProxyManager.rollbackSuspendedConnection();
-        DataSourceProxyManager.rollbackFinallyConnection();
+//        DataSourceProxyManager.rollbackSuspendedConnection();
     }
 
     @Override
@@ -114,26 +123,29 @@ public class DataSourceProxyTransactionManager extends DataSourceRoutingTransact
     }
     private void determineDataSource(TransactionDefinition definition){
         if (definition.isReadOnly()) {
-            DataSourceProxyManager.markSlave();
+            DataSourceProxyManager.markSlave(getDataSource());
             logger.info(">>> 选择从库 because readOnly is {} in [{}]", definition.isReadOnly(), definition.getName());
         } else {
-            DataSourceProxyManager.markMaster();
+            DataSourceProxyManager.markMaster(getDataSource());
             logger.info(">>> 选择主库 because readOnly is {} in [{}]", definition.isReadOnly(), definition.getName());
         }
     }
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
-        logger.debug(">>> 清理事务 DataSourceProxyManager holder by {}", DataSourceProxyManager.getType());
-        DataSourceProxyManager.rest();
-        if(DataSourceProxyManager.isSuspendedTransactionActive(getDataSource())){
+        logger.debug(">>> 清理事务 DataSourceProxyManager holder by {}", DataSourceProxyManager.getType(getDataSource()));
+        DataSourceProxyManager.rest(getDataSource());
+        boolean isSuspendedActive = DataSourceProxyManager.isSuspendedTransactionActive(getDataSource());
+        if(isSuspendedActive){
             logger.debug(">>> 存在挂起事务，暂不清理..");
-        }else{
-            logger.debug(">>> 清理挂起事务.");
-            DataSourceProxyManager.cleanupAfterCompletion();
         }
-        DataSourceProxyManager.releasedTransaction();
         super.doCleanupAfterCompletion(transaction);
-        DataSourceProxyManager.cleanupAfterFinallyCompletion();
+        if(!isSuspendedActive){
+            logger.debug(">>> 清理挂起事务.");
+//            DataSourceProxyManager.cleanupAfterCompletion();
+            DataSourceProxyManager.cleanupSlaveConnection(getDataSource());
+            DataSourceProxyManager.cleanupMasterConnection(getDataSource());
+            DataSourceProxyManager.cleanupSuspendedConnection(getDataSource());
+        }
     }
 
     private String getIsolationLevelName(int code){
@@ -170,5 +182,18 @@ public class DataSourceProxyTransactionManager extends DataSourceRoutingTransact
             default:
                 return "PROPAGATION_SUPPORTS";
         }
+    }
+
+    /**
+     * 事务管理器描述
+     */
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
