@@ -186,6 +186,28 @@ public class DataSourceProxyManager {
         logger.trace("挂起事务连接 [{}] for key [{}] in map {}.", conn, key, map);
     }
 
+    /**
+     * 释放连接和清理线程数据
+     */
+    public static void cleanupAfterCompletion(){
+//        closeMasterAndSlaveConnection();
+        closeSuspendedConnection();
+//        slaveConnectionHolder.set(null);
+//        masterConnectionHolder.set(null);
+    }
+    /**
+     * 释放连接
+     */
+    public static void closeMasterAndSlaveConnection(){
+        if(null != masterConnectionHolder.get()){
+            closeConnectionByMap(masterConnectionHolder.get());
+            masterConnectionHolder.set(null);
+        }
+        if(null != slaveConnectionHolder.get()){
+            closeConnectionByMap(slaveConnectionHolder.get());
+            slaveConnectionHolder.set(null);
+        }
+    }
 
     /**
      *
@@ -366,30 +388,13 @@ public class DataSourceProxyManager {
         logger.debug("释放Master连接完成 {} by [{}].", map, key);
     }
     public static void cleanupSuspendedConnection(Object key){
-        Map<Object,Connection> mapConn = currentSuspendedConnection.get();
-        Map<Object,Boolean> mapActive = currentSuspendedTransactionActive.get();
-        logger.debug("释放挂起连接 {} by [{}].", mapConn, key);
-        logger.debug("释放挂起连接活动 {} by [{}].", mapActive, key);
-        closeConnectionByKey(mapConn, key);
-        closeConnectionActiveByKey(mapActive, key);
-        logger.debug("释放挂起连接完成 {} by [{}].", mapConn, key);
-        logger.debug("释放挂起连接活动完成 {} by [{}].", mapActive, key);
-        if(mapConn == null || mapConn.isEmpty()) {
-            currentSuspendedConnection.set(null);
-        }
-        if(mapActive == null || mapActive.isEmpty()) {
+        Map<Object,Connection> map = currentSuspendedConnection.get();
+        logger.debug("释放挂起连接 {} by [{}].", map, key);
+        closeConnectionByKey(map, key);
+        logger.debug("释放挂起连接完成 {} by [{}].", map, key);
+        if(map == null || map.isEmpty()) {
             currentSuspendedTransactionActive.set(null);
-        }
-    }
-    public static void closeConnectionActiveByKey(Map<Object,Boolean> map, Object key){
-        if((null != map) && (!map.isEmpty())){
-            Boolean active = map.get(key);
-            if(active != null){
-                map.remove(key);
-            }
-            if(map.isEmpty()){
-                map.clear();
-            }
+            currentSuspendedConnection.set(null);
         }
     }
     public static void closeConnectionByKey(Map<Object,Connection> map, Object key){

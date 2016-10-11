@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.util.Assert;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>Time: 10:47 </p>
  * <p>Version: 1.0.1 </p>
  */
-public class DataSourceProxy extends AbstractDataSource implements InitializingBean{
+public class DataSourceProxy extends AbstractDataSource implements InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(DataSourceProxy.class);
 
@@ -164,6 +163,9 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
                 conn = determineDataSource().getConnection();
                 isNewConnection = true;
             }
+//            if (conn.getAutoCommit()) {
+//                conn.setAutoCommit(false);
+//            }
             if (isNewConnection) {
                 DataSourceProxyManager.setSlaveConnection(this, conn);
             }
@@ -179,12 +181,12 @@ public class DataSourceProxy extends AbstractDataSource implements InitializingB
                 conn = determineDataSource().getConnection();
                 isNewConnection = true;
             }
-            if (isNewConnection) {
-                if(DataSourceProxyManager.isMaster(this)) {
-                    if (conn.getAutoCommit()) {
-                        conn.setAutoCommit(false);
-                    }
+            if(DataSourceProxyManager.isMaster(this)) {
+                if (conn.getAutoCommit()) {
+                    conn.setAutoCommit(false);
                 }
+            }
+            if (isNewConnection) {
                 DataSourceProxyManager.setMasterConnection(this, conn);
             }
         }

@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5d21a1d3-16b2-4192-adad-3c07da7cd612" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/resources/config/log4j.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/webapp/WEB-INF/emails/user/register.ftl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_1_0_24.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/DatasourceProxy_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/DatasourceProxy_war_exploded.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DatasourceProxy.iml" afterPath="$PROJECT_DIR$/DatasourceProxy.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/AbstractRoutingTransactionManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/AbstractRoutingTransactionManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxy.java" afterPath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxy.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java" />
@@ -43,13 +44,114 @@
     <favorites_list name="DatasourceProxy" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="generatorConfig.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/generator/generatorConfig.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-9.529411">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.0">
+              <caret line="343" column="0" selection-start-line="343" selection-start-column="0" selection-end-line="343" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="AbstractRoutingTransactionManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/AbstractRoutingTransactionManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
-              <folding />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#3843#3844#0" expanded="false" />
+                <element signature="e#3897#3898#0" expanded="false" />
+                <element signature="e#5014#5015#0" expanded="false" />
+                <element signature="e#5056#5057#0" expanded="false" />
+                <element signature="e#5544#5545#0" expanded="false" />
+                <element signature="e#5596#5597#0" expanded="false" />
+                <element signature="e#6751#6752#0" expanded="false" />
+                <element signature="e#6806#6807#0" expanded="false" />
+                <element signature="e#9630#9631#0" expanded="false" />
+                <element signature="e#9694#9695#0" expanded="false" />
+                <element signature="e#11056#11057#0" expanded="false" />
+                <element signature="e#11113#11114#0" expanded="false" />
+                <element signature="e#11799#11800#0" expanded="false" />
+                <element signature="e#11850#11851#0" expanded="false" />
+                <element signature="e#47805#47806#0" expanded="false" />
+                <element signature="e#47832#47833#0" expanded="false" />
+                <element signature="e#53229#53230#0" expanded="false" />
+                <element signature="e#53257#53258#0" expanded="false" />
+                <element signature="e#58902#58903#0" expanded="false" />
+                <element signature="e#58970#58971#0" expanded="false" />
+                <marker date="1476155011939" expanded="true" signature="2916:3491" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="3576:3653" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="12434:15236" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="15502:20930" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="21395:21647" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="21970:22306" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="28998:29391" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="31748:31977" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="32070:35091" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="35766:35985" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="36052:38018" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="38024:38312" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="38433:39596" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="42356:43101" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="43222:43328" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="44431:45646" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="45730:46623" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="46716:46745" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="46751:47747" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="47839:49002" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="49139:49891" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="49971:50151" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="50157:50891" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="50995:51175" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="51181:53171" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="53826:54360" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="54465:54960" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="55067:55581" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="55680:55947" placeholder="{...}" />
+                <marker date="1476155011939" expanded="true" signature="55953:56958" placeholder="/**...*/" />
+                <marker date="1476155011939" expanded="true" signature="57137:57455" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DataSourceRoutingTransactionManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceRoutingTransactionManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#1634#1635#0" expanded="false" />
+                <element signature="e#1683#1684#0" expanded="false" />
+                <element signature="e#3902#3903#0" expanded="false" />
+                <element signature="e#3940#3941#0" expanded="false" />
+                <element signature="e#4163#4164#0" expanded="false" />
+                <element signature="e#4201#4202#0" expanded="false" />
+                <element signature="e#12801#12802#0" expanded="false" />
+                <element signature="e#12856#12857#0" expanded="false" />
+                <element signature="e#13061#13062#0" expanded="false" />
+                <element signature="e#13118#13119#0" expanded="false" />
+                <element signature="e#13159#13160#0" expanded="false" />
+                <element signature="e#13222#13223#0" expanded="false" />
+                <element signature="e#13265#13266#0" expanded="false" />
+                <element signature="e#13334#13335#0" expanded="false" />
+                <marker date="1476155011966" expanded="true" signature="2007:3199" placeholder="/**...*/" />
+                <marker date="1476155011966" expanded="true" signature="3253:3767" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -58,24 +160,9 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxy.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DataSourceProxyManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="false" />
-                <element signature="e#822#851#0" expanded="false" />
-                <element signature="e#1048#1073#0" expanded="false" />
-                <element signature="e#1280#1305#0" expanded="false" />
-                <element signature="e#1475#1497#0" expanded="false" />
-                <element signature="e#1663#1688#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -85,19 +172,23 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyTransactionManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#8482#8483#0" expanded="false" />
+                <element signature="e#8516#8517#0" expanded="false" />
+                <element signature="e#8570#8571#0" expanded="false" />
+                <element signature="e#8616#8617#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DataSourceRoutingTransactionManager.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceRoutingTransactionManager.java">
+      <file leaf-file-name="DataSourceProxyManager.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.69574946">
-              <caret line="204" column="25" selection-start-line="204" selection-start-column="25" selection-end-line="204" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.6442953">
+              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -108,7 +199,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -118,7 +211,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -193,12 +288,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/service/impl/CatService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/service/impl/CatMainService.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/stone/db/proxy/CatServiceTest.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/AbstractRoutingTransactionManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxy.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyTransactionManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceRoutingTransactionManager.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java" />
       </list>
     </option>
   </component>
@@ -306,8 +401,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -410,58 +503,6 @@
               <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="spring" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DatasourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataSourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DatasourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataSourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -507,58 +548,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="database" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DatasourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataSourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="config" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DatasourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DataSourceProxy" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -583,6 +572,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -598,22 +589,22 @@
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy" />
+      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\resources\database" />
+      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\lib" />
+      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\test\resources" />
+      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\resources\config" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.stone.db.proxy.mapper" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy\service\impl" />
       <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy\controller" />
       <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy\controller\context" />
       <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy\service\interfaces" />
       <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\main\webapp\WEB-INF\emails\user" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.stone.db.proxy.mapper" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\resources\database" />
-      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\java\com\stone\db\proxy" />
-      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\lib" />
-      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\test\resources" />
-      <recent name="D:\WorkSpace\IntelliJ\home\DataSourceProxy\src\main\resources\config" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.CatServiceTest.test1">
@@ -1341,7 +1332,10 @@
       <workItem from="1470726339958" duration="9560000" />
       <workItem from="1471242667844" duration="56000" />
       <workItem from="1471341835911" duration="153000" />
-      <workItem from="1473146082425" duration="304000" />
+      <workItem from="1473146082425" duration="344000" />
+      <workItem from="1476003738844" duration="26000" />
+      <workItem from="1476003957236" duration="98000" />
+      <workItem from="1476154849347" duration="851000" />
     </task>
     <task id="LOCAL-00001" summary="1.升级spring到4.1.8&#10;2.事务管理处理增强&#10;3.添加事务处理流程说明">
       <created>1452668343802</created>
@@ -1409,7 +1403,13 @@
       <option name="project" value="LOCAL" />
       <updated>1461033657273</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix">
+      <created>1473146407938</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1473146407938</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1445,7 +1445,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178790000" />
+    <option name="totallyTimeSpent" value="179805000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
@@ -1504,7 +1504,8 @@
     <MESSAGE value="add spring-ctx-db.xml" />
     <MESSAGE value="1.support DataSourceProxy set masters list&#10;2.slaves list change to array" />
     <MESSAGE value="add tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="add tests" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1606,7 +1607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1730,7 +1730,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="64" column="88" selection-start-line="64" selection-start-column="88" selection-end-line="64" selection-end-column="88" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1808,27 +1807,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/generator/generatorConfig.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.941177">
-          <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.73255813">
-          <caret line="188" column="6" selection-start-line="188" selection-start-column="6" selection-end-line="192" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/far/FarExport.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.12751678">
           <caret line="77" column="30" selection-start-line="77" selection-start-column="17" selection-end-line="77" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1836,7 +1818,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1409396">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1844,11 +1825,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16107382">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding>
-            <marker date="1460951919012" expanded="true" signature="604:649" placeholder="INSERT INTO users... " />
-            <marker date="1460951919012" expanded="true" signature="791:825" placeholder="SELECT id,na... users" />
-            <marker date="1460951919012" expanded="true" signature="956:1003" placeholder="SELECT id,na... users" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1856,7 +1832,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16107382">
           <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1864,7 +1839,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1872,6 +1849,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/generator/generatorConfig.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.529411">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.0">
+          <caret line="343" column="0" selection-start-line="343" selection-start-column="0" selection-end-line="343" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1879,30 +1874,96 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/AbstractRoutingTransactionManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
-          <folding />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3843#3844#0" expanded="false" />
+            <element signature="e#3897#3898#0" expanded="false" />
+            <element signature="e#5014#5015#0" expanded="false" />
+            <element signature="e#5056#5057#0" expanded="false" />
+            <element signature="e#5544#5545#0" expanded="false" />
+            <element signature="e#5596#5597#0" expanded="false" />
+            <element signature="e#6751#6752#0" expanded="false" />
+            <element signature="e#6806#6807#0" expanded="false" />
+            <element signature="e#9630#9631#0" expanded="false" />
+            <element signature="e#9694#9695#0" expanded="false" />
+            <element signature="e#11056#11057#0" expanded="false" />
+            <element signature="e#11113#11114#0" expanded="false" />
+            <element signature="e#11799#11800#0" expanded="false" />
+            <element signature="e#11850#11851#0" expanded="false" />
+            <element signature="e#47805#47806#0" expanded="false" />
+            <element signature="e#47832#47833#0" expanded="false" />
+            <element signature="e#53229#53230#0" expanded="false" />
+            <element signature="e#53257#53258#0" expanded="false" />
+            <element signature="e#58902#58903#0" expanded="false" />
+            <element signature="e#58970#58971#0" expanded="false" />
+            <marker date="1476155011939" expanded="true" signature="2916:3491" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="3576:3653" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="12434:15236" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="15502:20930" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="21395:21647" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="21970:22306" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="28998:29391" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="31748:31977" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="32070:35091" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="35766:35985" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="36052:38018" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="38024:38312" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="38433:39596" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="42356:43101" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="43222:43328" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="44431:45646" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="45730:46623" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="46716:46745" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="46751:47747" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="47839:49002" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="49139:49891" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="49971:50151" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="50157:50891" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="50995:51175" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="51181:53171" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="53826:54360" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="54465:54960" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="55067:55581" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="55680:55947" placeholder="{...}" />
+            <marker date="1476155011939" expanded="true" signature="55953:56958" placeholder="/**...*/" />
+            <marker date="1476155011939" expanded="true" signature="57137:57455" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceRoutingTransactionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1634#1635#0" expanded="false" />
+            <element signature="e#1683#1684#0" expanded="false" />
+            <element signature="e#3902#3903#0" expanded="false" />
+            <element signature="e#3940#3941#0" expanded="false" />
+            <element signature="e#4163#4164#0" expanded="false" />
+            <element signature="e#4201#4202#0" expanded="false" />
+            <element signature="e#12801#12802#0" expanded="false" />
+            <element signature="e#12856#12857#0" expanded="false" />
+            <element signature="e#13061#13062#0" expanded="false" />
+            <element signature="e#13118#13119#0" expanded="false" />
+            <element signature="e#13159#13160#0" expanded="false" />
+            <element signature="e#13222#13223#0" expanded="false" />
+            <element signature="e#13265#13266#0" expanded="false" />
+            <element signature="e#13334#13335#0" expanded="false" />
+            <marker date="1476155011966" expanded="true" signature="2007:3199" placeholder="/**...*/" />
+            <marker date="1476155011966" expanded="true" signature="3253:3767" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="false" />
-            <element signature="e#822#851#0" expanded="false" />
-            <element signature="e#1048#1073#0" expanded="false" />
-            <element signature="e#1280#1305#0" expanded="false" />
-            <element signature="e#1475#1497#0" expanded="false" />
-            <element signature="e#1663#1688#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1910,17 +1971,21 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyTransactionManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#8482#8483#0" expanded="false" />
+            <element signature="e#8516#8517#0" expanded="false" />
+            <element signature="e#8570#8571#0" expanded="false" />
+            <element signature="e#8616#8617#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceRoutingTransactionManager.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/stone/db/proxy/DataSourceProxyManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.69574946">
-          <caret line="204" column="25" selection-start-line="204" selection-start-column="25" selection-end-line="204" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.6442953">
+          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding />
         </state>
       </provider>
