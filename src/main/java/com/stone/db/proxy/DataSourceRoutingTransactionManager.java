@@ -189,7 +189,7 @@ public class DataSourceRoutingTransactionManager extends AbstractRoutingTransact
         try {
             Method method = connectionHolder.getClass().getDeclaredMethod("isTransactionActive");
             method.setAccessible(true);
-            return (boolean) method.invoke(connectionHolder,new Object[0]);
+            return (Boolean) method.invoke(connectionHolder,new Object[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }

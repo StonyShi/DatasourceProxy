@@ -8,7 +8,7 @@
     <name>DatasourceProxy</name>
 
     <properties>
-        <spring.version>4.1.8.RELEASE</spring.version>
+        <spring.version>4.2.7.RELEASE</spring.version>
         <jackson.version>2.7.2</jackson.version>
         <netty.version>4.0.34.Final</netty.version>
         <httpclient.version>4.3.1</httpclient.version>
@@ -28,6 +28,15 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+
 
         <!--<dependency>-->
         <!--<groupId>javax.servlet.jsp</groupId>-->
@@ -106,11 +115,11 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-oxm</artifactId>-->
+            <!--<version>${spring.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework</groupId>

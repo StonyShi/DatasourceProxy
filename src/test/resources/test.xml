@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="baseMapper" class="com.stone.db.proxy.test.AnimalFactoryBean" abstract="true" lazy-init="true">
+    </bean>
+
+    <bean id="cat" parent="baseMapper">
+        <property name="daoClass" value="com.stone.db.proxy.test.db.Cat" />
+    </bean>
+
+    <bean id="dog" parent="baseMapper">
+        <property name="daoClass" value="com.stone.db.proxy.test.db.Dog" />
+    </bean>
+</beans>
